@@ -7,6 +7,12 @@ class HomeController extends Controller {
     const { ctx } = this;
     ctx.body = 'hi, egg';
   }
+
+  async test() {
+    const { ctx } = this;
+    const category = await ctx.service.test.findAll();
+    ctx.body = category;
+  }
 }
 
 module.exports = HomeController;
