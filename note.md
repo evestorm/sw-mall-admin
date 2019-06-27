@@ -30,13 +30,13 @@ p.s. 上述初始化过程请科学上网。而且有可能仍然失败，如果
 
 ### 安装与配置数据库
 
-安装对应的插件 [egg-mysql](https://github.com/eggjs/egg-mysql) ：
+个人习惯于使用 mysql 数据库，而且 egg 也提供了插件供我们使用，所以为了方便，使用 egg-mysql 来对数据库进行操作，首先来安装它 [egg-mysql](https://github.com/eggjs/egg-mysql) ：
 
 ```shell
 $ npm i egg-mysql
 ```
 
-在 `config/plugin.js` 中开启插件：
+然后在 `config/plugin.js` 中开启插件：
 
 ```js
 mysql: {
@@ -52,9 +52,9 @@ mysql: {
 config.mysql = {
   client: {
     host: '127.0.0.1', // 主机
-    port: '8889', // 端口号
-    user: 'root', // 用户名
-    password: 'root', // 密码
+    port: '8889', // 端口号（默认是3306）
+    user: 'root', // 数据库用户名
+    password: 'root', // 数据库密码
     database: 'sw-mall',  // 数据库名
   },
   app: true,  // 是否加载到 app 上，默认开启
@@ -64,13 +64,13 @@ config.mysql = {
 
 ### 导入数据库文件
 
-我已经把本地的数据库导出为 [sw-mall.sql](#) 文件，各位需要自行导入到本地的 mysql 中。
+我已经把本地的数据库导出为 [sw-mall.sql](#) 文件，需要各位自行导入到本地的 mysql 中。
 
 ### 测试数据库连接
 
 一切准备好后，我们现在可以上手写个简单的查询来测试数据库连接是否正常了。
 
-#### 在 service 层编写数据查询
+#### 在 Service 层编写数据查询
 
 首先在 `app` 目录下新建 `service` 文件夹，然后建立一个 `test.js` 文件键入下面代码：
 
@@ -135,7 +135,9 @@ router.get('/test', controller.home.test);
 
 ### 在 Service 中编写查询方法
 
-首先在 `app/service` 文件夹中新建 `admin` 文件夹，并在其中创建 `user.js` 文件，这里负责从数据库中查询符合条件的数据，例如 `findOne` 方法可以根据「email」找到符合条件的管理员。目前我们仅需要实现下列方法：
+整个项目需要两套接口，一套是提供给用户使用的商城App，一套是提供给后台管理员使用的管理系统（PC），为了区分它们，我将后台部分的API接口全部放进 `service` 下的 `admin` 文件夹。
+
+首先我们在 `app/service` 文件夹中新建 `admin` 文件夹，并在其中创建 `user.js` 文件，这里负责从数据库中查询管理员相关的数据，例如 `findOne` 方法可以根据「email」找到符合条件的管理员。目前我们仅需要实现下列方法：
 
 - findOne（根据邮箱查找目标管理员）
 - add（添加一个新管理员）
@@ -144,7 +146,7 @@ router.get('/test', controller.home.test);
 
 ### 安装 bcrypt 和 gravatar
 
-存储密码很重要的一步就是加密，我们采用 bcrypt 帮助我们给密码加盐；同时我们的管理员表的字段中还包含一个 avatar 字段，我们又采用 gravatar 帮我们获取或生成管理员账户的头像。
+存储密码很重要的一步就是加密，这里我们采用 [bcrypt](https://www.npmjs.com/package/bcrypt) ；同时我们的管理员表的字段中还包含一个 avatar 字段，我们采用 [gravatar](https://www.npmjs.com/package/gravatar)（[全球公认头像](https://cn.gravatar.com/)） 帮助我们获取或生成头像。
 
 接下来我们安装它们：
 
@@ -179,10 +181,10 @@ async register() {
     let { name, email, password, role } = ctx.body;
     // 加盐
     const salt = bcrypt.genSaltSync(10);
-    // 生成hash密码
+    // 根据用户输入密码来生成hash密码
     const hash = bcrypt.hashSync(password, salt);
     password = hash;
-    // 获取/生成全球头像（当该邮箱从未注册过，返回一个默认头像，否则返回用户头像）
+    // 获取/生成全球头像（当该邮箱从未注册过，返回一个默认头像，否则返回用户已经设置过的头像）
     const avatar = gravatar.url(email, {
       s: '200', r: 'pg', d: 'mm',
     });
@@ -216,7 +218,7 @@ async register() {
 
 ## 编写登录接口
 
-我们的登录接口采用 jwt 方案，所以首先来安装 jwt：
+我们的登录接口采用 jwt 方案（不了解 jwt 是什么的，可以点击[此处](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)查看阮一峰老师关于jwt的入门教程），首先来安装 jwt：
 
 ```shell
 npm i jsonwebtoken
@@ -238,7 +240,7 @@ async login() {
   const user = await ctx.service.admin.user.findOne(email);
   if (user) {
     const hashpwd = user.password;
-    // 比对密码是否一致，一致生成 token 登录成功
+    // 比对密码是否一致，一致则生成 token 登录成功
     await ctx.service.admin.user.comparePassword(password, hashpwd).then(isMatch => {
       if (isMatch) {
         const { id, name, avatar, identity } = user;
@@ -278,20 +280,22 @@ async login() {
 上述代码可以用下面的伪代码概括：
 
 ```js
-根据用户输入的邮箱在数据库中查找是否存在
+根据用户输入的邮箱在数据库中查找是否存在该管理员账户
 如果存在：
-  比较用户密码是否与数据库密码一致（利用bcrypt）
+  比较用户输入密码是否与数据库中存储的密码一致（利用bcrypt）
   如果一致：
-    返回生成的token（利用jwt）
+    返回生成的jwt
   不一致：
-    返回用户登录失败
+    返回用户登录失败信息
 不存在：
-  返回用户不存在
+  返回用户不存在信息
 ```
 
-完成登录接口的编写后，你可以访问 `127.0.0.1:7000/admin/login` 接口进行登录，登录成功后API会返回token给你，然后你就可以带着这个token来请求当前登录用户的个人数据了。请求个人数据的接口我们定义为 `admin/user` ，该API接收一个 token ，当 token 存在并且没有过期时，该API返回用户的个人数据，下面我们就来编写这个接口。
+完成登录接口的编写后，你可以访问 `127.0.0.1:7000/admin/login` 接口进行登录，登录成功后API会返回token给你，然后你就可以带着这个token来请求当前登录用户的个人数据了。请求个人数据的接口我们定义为 `admin/user` ，该API接收一个 jwt ，当 jwt 存在并且没有过期时，该API返回用户的个人数据，下面我们就来编写这个接口。
 
-## 使用 egg-passport-jwt 验证 token
+## 使用 egg-passport-jwt 验证 token 的有效性
+
+接下来就是「登录鉴权」部分的逻辑处理，如果对 passport 不熟悉，可以点击[此处查看](https://eggjs.org/zh-cn/tutorials/passport.html#%E4%BD%BF%E7%94%A8-egg-passport) 了解它。
 
 ### 安装两个包
 
@@ -344,7 +348,7 @@ module.exports = app => {
 
 ### 用户信息处理
 
-现在我们需要在项目根目录下新建 `app.js` 文件，并在其中去数据库里查询用户是否存在：
+现在我们需要在项目根目录下新建 `app.js` 文件，然后拿到payload里面的id，去数据库里查询用户并返回：
 
 ```js
 module.exports = app => {
@@ -360,7 +364,7 @@ module.exports = app => {
 
 ### 在 Controller 中编写 user 方法
 
-最后我们还需要在 `app/controller/admin/user.js` 文件下编写 `user` 方法：
+最后我们就可以在 `app/controller/admin/user.js` 文件下编写 `user` 方法了：
 
 ```js
 async user() {
