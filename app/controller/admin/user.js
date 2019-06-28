@@ -20,15 +20,17 @@ class UserController extends Controller {
       // 比对密码是否一致，一致生成 token 登录成功
       await ctx.service.admin.user.comparePassword(password, hashpwd).then(isMatch => {
         if (isMatch) {
-          const { id, name, avatar, identity } = user;
-          const rule = { id, name, avatar, identity };
+          const { id, name, avatar, role } = user;
+          const rule = { id, name, avatar, role };
           // jwt.sign('规则', '加密名字', '过期时间')
           const token = jwt.sign(rule, 'lance', { expiresIn: 3600 });
           ctx.status = 200;
           ctx.body = {
             code: 0,
             msg: 'success',
-            token: 'Bearer ' + token,
+            data: {
+              token: 'Bearer ' + token,
+            },
           };
         } else {
           ctx.status = 400;
@@ -63,7 +65,7 @@ class UserController extends Controller {
     if (user) {
       ctx.status = 400;
       ctx.body = {
-        code: 0,
+        code: 1,
         msg: '邮箱已被注册!',
       };
     } else {

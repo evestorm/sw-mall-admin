@@ -243,8 +243,8 @@ async login() {
     // 比对密码是否一致，一致则生成 token 登录成功
     await ctx.service.admin.user.comparePassword(password, hashpwd).then(isMatch => {
       if (isMatch) {
-        const { id, name, avatar, identity } = user;
-        const rule = { id, name, avatar, identity };
+        const { id, name, avatar, role } = user;
+        const rule = { id, name, avatar, role };
         // jwt.sign('规则', '加密名字', '过期时间')
         const token = jwt.sign(rule, 'lance', { expiresIn: 3600 });
         ctx.status = 200;
@@ -371,12 +371,12 @@ async user() {
   const { ctx } = this;
   // 使用 ctx.isAuthenticated() 判断是否登录。
   if (ctx.isAuthenticated()) {
-    const { id, name, avatar, email, identity } = ctx.user;
+    const { id, name, avatar, email, role } = ctx.user;
     ctx.status = 200;
     ctx.body = {
       code: 0,
       msg: '获取信息成功！',
-      data: { id, name, avatar, email, identity },
+      data: { id, name, avatar, email, role },
     };
   }
 }
