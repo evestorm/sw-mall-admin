@@ -12,6 +12,6 @@ module.exports = {
   },
   passportJwt: {
     enable: true,
-    package: 'egg-passport-jwt',
+    package: 'passport-jwt',
   },
 };

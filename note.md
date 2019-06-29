@@ -175,7 +175,7 @@ async register() {
     ctx.status = 400;
     ctx.body = {
       code: 0,
-      msg: '邮箱已被注册!',
+      message: '邮箱已被注册!',
     };
   } else {
     let { name, email, password, role } = ctx.body;
@@ -196,14 +196,14 @@ async register() {
       ctx.status = 200;
       ctx.body = {
         code: 0,
-        msg: '恭喜你，注册成功！',
+        message: '恭喜你，注册成功！',
         data: user,
       };
     } else {
       ctx.status = 200;
       ctx.body = {
         code: 1,
-        msg: '注册失败，请稍后重试',
+        message: '注册失败，请稍后重试',
       };
     }
   }
@@ -250,28 +250,28 @@ async login() {
         ctx.status = 200;
         ctx.body = {
           code: 0,
-          msg: 'success',
+          message: 'success',
           token: 'Bearer ' + token,
         };
       } else {
         ctx.status = 400;
         ctx.body = {
           code: 1,
-          msg: '登录失败，请检查用户名或密码是否填写正确！',
+          message: '登录失败，请检查用户名或密码是否填写正确！',
         };
       }
     }).catch(err => {
       ctx.status = 400;
       ctx.body = {
         code: 1,
-        msg: err,
+        message: err,
       };
     });
   } else {
     ctx.status = 404;
     ctx.body = {
       code: 1,
-      msg: '用户不存在！',
+      message: '用户不存在！',
     };
   }
 }
@@ -293,7 +293,7 @@ async login() {
 
 完成登录接口的编写后，你可以访问 `127.0.0.1:7000/admin/login` 接口进行登录，登录成功后API会返回token给你，然后你就可以带着这个token来请求当前登录用户的个人数据了。请求个人数据的接口我们定义为 `admin/user` ，该API接收一个 jwt ，当 jwt 存在并且没有过期时，该API返回用户的个人数据，下面我们就来编写这个接口。
 
-## 使用 egg-passport-jwt 验证 token 的有效性
+## 使用 passport-jwt 验证 token 的有效性
 
 接下来就是「登录鉴权」部分的逻辑处理，如果对 passport 不熟悉，可以点击[此处查看](https://eggjs.org/zh-cn/tutorials/passport.html#%E4%BD%BF%E7%94%A8-egg-passport) 了解它。
 
@@ -302,7 +302,7 @@ async login() {
 首先在命令行键入下面命令来安装包：
 
 ```shell
-npm i egg-passport egg-passport-jwt
+npm i egg-passport passport-jwt
 ```
 
 ### 配置并开启插件
@@ -318,17 +318,8 @@ passport: {
 },
 passportJwt: {
   enable: true,
-  package: 'egg-passport-jwt',
+  package: 'passport-jwt',
 },
-```
-
-> config/config.default.js
-
-```js
-// 配置 passport-jwt
-config.passportJwt = {
-  secret: 'lance',
-};
 ```
 
 ### 挂载路由
@@ -346,19 +337,34 @@ module.exports = app => {
 };
 ```
 
-### 用户信息处理
+### 配置 passport-jwt
 
-现在我们需要在项目根目录下新建 `app.js` 文件，然后拿到payload里面的id，去数据库里查询用户并返回：
+现在我们需要在项目根目录下新建 `app.js` 文件，然后配置并挂载jwt，最后通过 jwt_payload.id 去数据库里查询用户并返回：
 
 ```js
+'use strict';
+
+const JwtStrategy = require('passport-jwt').Strategy,
+  ExtractJwt = require('passport-jwt').ExtractJwt;
+
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = 'lance';
+
 module.exports = app => {
-  app.passport.verify(async (ctx, user) => {
-    // 检查用户
-    const existsUser = await app.mysql.get('admin', { id: user.payload.id });
-    return existsUser;
-  });
+  app.passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+    app.mysql.get('admin', { id: jwt_payload.id }).then(user => {
+      if (user) {
+        console.log(user);
+        return done(null, user);
+      }
+      return done(null, false);
+    }).catch(err => console.log(err));
+  }));
 };
 ```
+
+p.s. 想要了解更多 passport-jwt 的使用方法，可以点击[此处](https://www.npmjs.com/package/passport-jwt)查看。
 
 至此，我们就完成了所有的配置。
 
@@ -375,7 +381,7 @@ async user() {
     ctx.status = 200;
     ctx.body = {
       code: 0,
-      msg: '获取信息成功！',
+      message: '获取信息成功！',
       data: { id, name, avatar, email, role },
     };
   }
@@ -393,3 +399,15 @@ async user() {
   ![获取管理员信息](./screenshots/获取管理员信息.png)
 
 搞定~
+
+## 编写一级分类接口
+
+在最终的后台管理系统中，有关一级分类的功能从下方截图能够清晰看出：
+
+![一级分类UI](./screenshots/一级分类UI.png)
+
+无非老生常谈的增删改查，所以这里不进行展开说明，仅把与之相关的文件列出来，方便大家查看：
+
+- 路由：`app/router.js`
+- 控制器：`app/controller/admin/category.js`
+- 服务层：`app/service/admin/category.js`

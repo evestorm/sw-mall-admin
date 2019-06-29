@@ -23,11 +23,11 @@ class UserController extends Controller {
           const { id, name, avatar, role } = user;
           const rule = { id, name, avatar, role };
           // jwt.sign('规则', '加密名字', '过期时间')
-          const token = jwt.sign(rule, 'lance', { expiresIn: 3600 });
+          const token = jwt.sign(rule, 'lance', { expiresIn: '3600s' });
           ctx.status = 200;
           ctx.body = {
             code: 0,
-            msg: 'success',
+            message: 'success',
             data: {
               token: 'Bearer ' + token,
             },
@@ -36,21 +36,21 @@ class UserController extends Controller {
           ctx.status = 400;
           ctx.body = {
             code: 1,
-            msg: '登录失败，请检查用户名或密码是否填写正确！',
+            message: '登录失败，请检查用户名或密码是否填写正确！',
           };
         }
       }).catch(err => {
         ctx.status = 400;
         ctx.body = {
           code: 1,
-          msg: err,
+          message: err,
         };
       });
     } else {
       ctx.status = 404;
       ctx.body = {
         code: 1,
-        msg: '用户不存在！',
+        message: '用户不存在！',
       };
     }
   }
@@ -66,7 +66,7 @@ class UserController extends Controller {
       ctx.status = 400;
       ctx.body = {
         code: 1,
-        msg: '邮箱已被注册!',
+        message: '邮箱已被注册!',
       };
     } else {
       let { name, email, password, role } = ctx.body;
@@ -87,14 +87,14 @@ class UserController extends Controller {
         ctx.status = 200;
         ctx.body = {
           code: 0,
-          msg: '恭喜你，注册成功！',
+          message: '恭喜你，注册成功！',
           data: user,
         };
       } else {
         ctx.status = 200;
         ctx.body = {
           code: 1,
-          msg: '注册失败，请稍后重试',
+          message: '注册失败，请稍后重试',
         };
       }
     }
@@ -104,12 +104,12 @@ class UserController extends Controller {
     const { ctx } = this;
     // 使用 ctx.isAuthenticated() 判断是否登录。
     if (ctx.isAuthenticated()) {
-      const { id, name, avatar, email, identity } = ctx.user;
+      const { id, name, avatar, email, role } = ctx.user;
       ctx.status = 200;
       ctx.body = {
         code: 0,
-        msg: '获取信息成功！',
-        data: { id, name, avatar, email, identity },
+        message: '获取信息成功！',
+        data: { id, name, avatar, email, role },
       };
     }
   }

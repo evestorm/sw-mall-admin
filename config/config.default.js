@@ -31,10 +31,10 @@ module.exports = appInfo => {
     agent: false,
   };
 
-  // 配置 passport-jwt
-  config.passportJwt = {
-    secret: 'lance',
-  };
+  // // 配置 passport-jwt
+  // config.passportJwt = {
+  //   secret: 'lance',
+  // };
 
   // 开发阶段暂时关闭 csrf 防御
   config.security = {

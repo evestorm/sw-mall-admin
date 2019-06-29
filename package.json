@@ -11,10 +11,10 @@
     "egg": "^2.15.1",
     "egg-mysql": "^3.0.0",
     "egg-passport": "^2.1.0",
-    "egg-passport-jwt": "^1.0.0",
     "egg-scripts": "^2.11.0",
     "gravatar": "^1.8.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",
