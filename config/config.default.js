@@ -31,10 +31,21 @@ module.exports = appInfo => {
     agent: false,
   };
 
-  // // 配置 passport-jwt
-  // config.passportJwt = {
-  //   secret: 'lance',
+  // 配置公共访问目录
+  // config.static = {
+  //   prefix: '/public/',
+  //   dir: [ path.join(appInfo.baseDir, 'app/public') ],
   // };
+
+  // 上传文件配置
+  config.multipart = {
+    fileSize: '1mb',
+    mode: 'stream',
+    fileExtensions: [
+      '.jpg', '.jpeg', // image/jpeg
+      '.png',
+    ],
+  };
 
   // 开发阶段暂时关闭 csrf 防御
   config.security = {

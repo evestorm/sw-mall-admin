@@ -16,4 +16,5 @@ module.exports = app => {
   router.post('/admin/category/add', jwt, controller.admin.category.addCategory);
   router.post('/admin/category/edit/:ID', jwt, controller.admin.category.editCategory);
   router.post('/admin/category/delete/:ID', jwt, controller.admin.category.deleteCategory);
+  router.post('/admin/form/upload', jwt, controller.admin.form.upload);
 };

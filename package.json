@@ -7,6 +7,7 @@
     "declarations": true
   },
   "dependencies": {
+    "await-stream-ready": "^1.0.1",
     "bcrypt": "^3.0.6",
     "egg": "^2.15.1",
     "egg-mysql": "^3.0.0",
@@ -14,7 +15,8 @@
     "egg-scripts": "^2.11.0",
     "gravatar": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "stream-wormhole": "^1.1.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",

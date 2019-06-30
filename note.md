@@ -411,3 +411,77 @@ async user() {
 - 路由：`app/router.js`
 - 控制器：`app/controller/admin/category.js`
 - 服务层：`app/service/admin/category.js`
+
+### 上传图片
+
+其中category有个 IMAGE 字段需要我们能够提供图片的上传功能，这里着重讲一下。
+
+首先在 `config/config.default.js` 中对上传的文件做一些配置：
+
+```js
+config.multipart = {
+  fileSize: '1mb',
+  mode: 'stream',
+  fileExtensions: [
+    '.jpg', '.jpeg', // image/jpeg
+    '.png',
+  ],
+};
+```
+
+然后我们来设置上传的路由，在 `app/router.js` 中配置：
+
+```js
+router.post('/admin/form/upload', jwt, controller.admin.form.upload);
+```
+
+这样前端就可以通过 `localhost:7001/admin/form/upload` 这个接口上传图片了。
+
+最后就是在 `app/controller/admin` 下新建 form.js 文件并编写代码了，但在写之前还要安装两个插件，一个是写入文件插件，另一个是出错关闭管道插件：
+
+```shell
+npm i await-stream-ready, stream-wormhole
+```
+
+安装完成后编写 Controller 代码：
+
+```js
+'use strict';
+const Controller = require('egg').Controller;
+// 文件存储
+const fs = require('fs');
+const path = require('path');
+const awaitWriteStream = require('await-stream-ready').write;
+const sendToWormhole = require('stream-wormhole');
+
+class FormController extends Controller {
+  async upload() {
+    const ctx = this.ctx;
+    const stream = await ctx.getFileStream();
+    // 文件名: 随机数 + 时间戳 + 原文件后缀
+    // path.extname(stream.filename).toLocaleLowerCase()为后缀名（.jpg,.png等）
+    const filename = Math.random().toString(36).substring(2) + new Date().getTime() + path.extname(stream.filename).toLocaleLowerCase();
+    // 图片存放在静态资源 public/admin/image 文件夹下
+    const target = path.join(this.config.baseDir, 'app/public/admin/image', filename);
+    // 生成一个文件写入 文件流
+    const writeStream = fs.createWriteStream(target);
+    try {
+      // 异步把文件流 写入
+      await awaitWriteStream(stream.pipe(writeStream));
+    } catch (err) {
+      // 如果出现错误，关闭管道
+      await sendToWormhole(stream);
+      throw err;
+    }
+    this.ctx.body = {
+      code: 0,
+      data: 'http://localhost:7001/public/admin/image/' + filename,
+      msg: '上传成功',
+    };
+  }
+}
+
+module.exports = FormController;
+```
+
+TODO: 如果你还想了解前端部分的代码，可以[点击这里]()直达。
