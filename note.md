@@ -485,3 +485,89 @@ module.exports = FormController;
 ```
 
 TODO: 如果你还想了解前端部分的代码，可以[点击这里]()直达。
+
+## 编写商品详情接口
+
+这次我们来编写商品详情的接口，先从列表页开始，下面是前端页面展示效果：
+
+![商品详情列表](./screenshots/商品详情列表.png)
+
+和之前的一级分类接口一样，首先得配置路由，然后分别在 「Controller」和「Service」 中创建相应文件... 由于步骤类似就不展示代码了，自己可以在下面几个文件中查看：
+
+- `app/controller/admin/goods.js`
+- `app/service/admin/goods.js`
+- `app/router.js`
+
+相比一级分类接口的列表页，这次的商品列表页多了两个功能：「分页」和「筛选」，所以把这部分代码粘贴过来方便查看：
+
+> app/controller/admin/goods.js
+
+我们在控制器中接收前端传递过来的参数，然后扔给service去拼接sql字符串
+
+```js
+/**
+ *  根据类别获取商品列表
+ */
+async getGoodsList() {
+  const { ctx } = this;
+  // 把前端的查询参数交给service
+  // 并获取「符合条件的所有条数」以及「当前请求页的具体15条数据」
+  const { allCount, results } = await ctx.service.admin.goods.findAllByFilter(ctx.query);
+  if (results) {
+    ctx.status = 200;
+    ctx.body = {
+      code: 0,
+      message: '成功获取商品数据',
+      data: {
+        allCount,
+        results,
+      },
+    };
+  } else {
+    ctx.status = 400;
+    ctx.body = {
+      code: 1,
+      message: '查询失败，请稍后重试！',
+    };
+  }
+}
+```
+
+> app/service/admin/goods.js
+
+service拿到controller传过来的参数后对sql语句进行拼接。这里要提一句，其实 egg 给我们封装了 egg-mysql 插件，可以很方便的进行[条件查询](https://eggjs.org/zh-cn/tutorials/mysql.html#read)，然而它没有提供「模糊」查询的接口，所以这里进行了sql语句拼接。
+
+```js
+/**
+ * 查询符合条件的商品
+ * @param {object} filter 前端传过来的参数
+ * @return {object} 商品列表
+ */
+async findAllByFilter(filter) {
+  // 子分类ID，请求页，标题关键词，创建时间
+  const { SUB_ID = '402880e86016d1b5016016e4dca2001e', page = 1, keywords = '', stime = '', etime = '' } = filter;
+  // 计算前端请求的页码应该从数据库的哪条数据开始查起
+  const start = (page - 1) * 15;
+
+  let where = '';
+  where += `WHERE SUB_ID = '${SUB_ID}'`;
+  where += keywords !== '' ?
+    ` AND NAME LIKE '%${keywords}%'` : '';
+  where += stime !== '' && etime !== '' ?
+    ` AND CREATE_TIME BETWEEN '${stime}' AND '${etime}'` : '';
+
+  // 查询符合条件的总条数
+  const allCount = await this.app.mysql.query(`SELECT COUNT(*) AS allCount FROM goods ${where}`);
+  // 查询符合条件的15条
+  const results = await this.app.mysql.query(
+    `SELECT
+      ID, SUB_ID, STATE, NAME, ORI_PRICE, PRESENT_PRICE, 
+      AMOUNT, DETAIL, SALES_COUNT, IMAGE1, 
+      CREATE_TIME, UPDATE_TIME 
+    FROM goods ${where} LIMIT ${start}, 15`);
+  return {
+    allCount: allCount[0].allCount,
+    results,
+  };
+}
+```
