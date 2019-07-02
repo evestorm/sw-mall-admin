@@ -535,7 +535,7 @@ async getGoodsList() {
 
 > app/service/admin/goods.js
 
-service拿到controller传过来的参数后对sql语句进行拼接。这里要提一句，其实 egg 给我们封装了 egg-mysql 插件，可以很方便的进行[条件查询](https://eggjs.org/zh-cn/tutorials/mysql.html#read)，然而它没有提供「模糊」查询的接口，所以这里进行了sql语句拼接。
+service 拿到 controller 传过来的参数后对 sql 语句进行拼接。这里要提一句，其实 egg 给我们封装了 egg-mysql 插件，可以很方便的进行[条件查询](https://eggjs.org/zh-cn/tutorials/mysql.html#read)，然而它没有提供「模糊」查询的接口，所以这里进行了sql语句拼接。
 
 ```js
 /**
@@ -544,9 +544,8 @@ service拿到controller传过来的参数后对sql语句进行拼接。这里要
  * @return {object} 商品列表
  */
 async findAllByFilter(filter) {
-  // 子分类ID，请求页，标题关键词，创建时间
-  const { SUB_ID = '402880e86016d1b5016016e4dca2001e', page = 1, keywords = '', stime = '', etime = '' } = filter;
-  // 计算前端请求的页码应该从数据库的哪条数据开始查起
+  // 子分类ID，请求页码，商品名称关键词，创建时间的区间
+  const { SUB_ID, page = 1, keywords = '', stime = '', etime = '' } = filter;
   const start = (page - 1) * 15;
 
   let where = '';

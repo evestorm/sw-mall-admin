@@ -5,7 +5,7 @@ const Controller = require('egg').Controller;
 class CategoryController extends Controller {
 
   /**
-   *  返回商品一级分类的数据
+   *  返回商品分类的数据
    */
   async getCategoryList() {
     const { ctx } = this;
@@ -14,7 +14,7 @@ class CategoryController extends Controller {
       ctx.status = 200;
       ctx.body = {
         code: 0,
-        message: '成功获取商品一级分类数据',
+        message: '成功获取商品分类数据',
         data: categoryList,
       };
     }

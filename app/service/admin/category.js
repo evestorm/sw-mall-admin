@@ -14,14 +14,11 @@ class CategoryService extends Service {
   }
 
   /**
-   * 查询所有商品一级分类
-   * @return {object} 一级分类列表
+   * 查询所有商品分类
    * @return {object} 所有一级分类信息
    */
   async findAllCate() {
-    const results = await this.app.mysql.select('category', {
-      where: { parent_id: 0 },
-    });
+    const results = await this.app.mysql.select('category');
     return results;
   }
 
@@ -46,11 +43,6 @@ class CategoryService extends Service {
    */
   async update(info) {
     console.log(info);
-    // const { cate_id, name, image, sort } = info;
-    // const { cate_id } = info;
-    // const row = {
-    //   name, image, sort,
-    // };
     const options = {
       where: { cate_id: info.cate_id },
     };

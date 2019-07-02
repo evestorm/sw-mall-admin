@@ -20,7 +20,7 @@ class GoodsService extends Service {
    */
   async findAllByFilter(filter) {
     // 子分类ID，请求页，标题关键词，创建时间
-    const { SUB_ID = '402880e86016d1b5016016e4dca2001e', page = 1, keywords = '', stime = '', etime = '' } = filter;
+    const { SUB_ID, page = 1, keywords = '', stime = '', etime = '' } = filter;
     // keywords = keywords);
     const start = (page - 1) * 15;
 
