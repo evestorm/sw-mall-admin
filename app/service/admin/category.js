@@ -4,67 +4,83 @@ const Service = require('egg').Service;
 
 class CategoryService extends Service {
   /**
-   * 查询一个一级商品分类
-   * @param {string} ID 分类ID
-   * @return {object} 管理员信息
+   * 查询一个商品分类
+   * @param {string} cate_id 分类cate_id字段
+   * @return {object} 分类信息
    */
-  async findOne(ID) {
-    const user = await this.app.mysql.get('category', { ID });
-    return user;
+  async findOneByCateId(cate_id) {
+    const result = await this.app.mysql.get('category', { cate_id });
+    return result;
   }
 
   /**
-   * 查询商品一级分类
+   * 查询所有商品一级分类
    * @return {object} 一级分类列表
+   * @return {object} 所有一级分类信息
    */
-  async findAll() {
-    const results = await this.app.mysql.select('category');
+  async findAllCate() {
+    const results = await this.app.mysql.select('category', {
+      where: { parent_id: 0 },
+    });
     return results;
   }
 
   /**
-   * 新增一个一级分类
+   * 新增一个分类
    * @param {object} info 分类信息
    * @return {boolean} 是否成功
    */
   async add(info) {
-    const { MALL_CATEGORY_NAME, IMAGE, SORT } = info;
+    // 生成随机32位「数字+字母」字符串
+    const cate_id = this.ctx.helper.getRandomStr(32);
     const result = await this.app.mysql.insert('category', {
-      MALL_CATEGORY_NAME, IMAGE, TYPE: 2, SORT, COMMENTS: null,
+      cate_id, ...info,
     });
     return result.affectedRows === 1;
   }
 
   /**
-   * 更新一个一级分类
-   * @param {object} info 一级分类信息
+   * 更新一个分类
+   * @param {object} info 分类信息
    * @return {boolean} 是否成功
    */
   async update(info) {
     console.log(info);
-    const { ID, MALL_CATEGORY_NAME, IMAGE, TYPE, SORT, COMMENTS } = info;
-    const row = {
-      MALL_CATEGORY_NAME, IMAGE, TYPE, SORT, COMMENTS,
-    };
+    // const { cate_id, name, image, sort } = info;
+    // const { cate_id } = info;
+    // const row = {
+    //   name, image, sort,
+    // };
     const options = {
-      where: { ID },
+      where: { cate_id: info.cate_id },
     };
-    const result = await this.app.mysql.update('category', row, options);
+    const result = await this.app.mysql.update('category', info, options);
     console.log(result);
     return result.affectedRows === 1;
   }
 
   /**
-   * 删除一个一级分类
-   * @param {*} ID 一级分类id
+   * 删除一个分类
+   * @param {*} cate_id 分类id
    * @return {boolean} 是否成功
-   * @memberof UserService
    */
-  async delete(ID) {
-    const result = await this.app.mysql.delete('category', { ID });
+  async delete(cate_id) {
+    const result = await this.app.mysql.delete('category', { cate_id });
     console.log(result);
     return result.affectedRows === 1;
   }
+
+  /* ======================================== */
+
+  // /**
+  //  * 查询一个二级商品分类
+  //  * @param {string} ID 分类ID
+  //  * @return {object} 管理员信息
+  //  */
+  // async subFindOne(ID) {
+  //   const user = await this.app.mysql.get('category_sub', { ID });
+  //   return user;
+  // }
 }
 
 module.exports = CategoryService;

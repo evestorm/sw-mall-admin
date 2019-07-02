@@ -414,7 +414,7 @@ async user() {
 
 ### 上传图片
 
-其中category有个 IMAGE 字段需要我们能够提供图片的上传功能，这里着重讲一下。
+其中category有个 image 字段需要我们能够提供图片的上传功能，这里着重讲一下。
 
 首先在 `config/config.default.js` 中对上传的文件做一些配置：
 

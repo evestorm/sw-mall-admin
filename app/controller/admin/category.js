@@ -9,7 +9,7 @@ class CategoryController extends Controller {
    */
   async getCategoryList() {
     const { ctx } = this;
-    const categoryList = await ctx.service.admin.category.findAll();
+    const categoryList = await ctx.service.admin.category.findAllCate();
     if (categoryList) {
       ctx.status = 200;
       ctx.body = {
@@ -26,10 +26,8 @@ class CategoryController extends Controller {
   async addCategory() {
     const { ctx } = this;
     ctx.body = ctx.request.body;
-    const { MALL_CATEGORY_NAME, IMAGE, SORT } = ctx.body;
-    const result = await ctx.service.admin.category.add({
-      MALL_CATEGORY_NAME, IMAGE, SORT,
-    });
+    ctx.body.parent_id = 0;
+    const result = await ctx.service.admin.category.add(ctx.body);
     if (result) {
       ctx.status = 200;
       ctx.body = {
@@ -50,9 +48,9 @@ class CategoryController extends Controller {
    */
   async editCategory() {
     const { ctx } = this;
-    const ID = ctx.params.ID;
+    const cate_id = ctx.params.cate_id;
     ctx.body = ctx.request.body;
-    const result = await ctx.service.admin.category.findOne(ID);
+    const result = await ctx.service.admin.category.findOneByCateId(cate_id);
     if (result) {
       await ctx.service.admin.category.update(ctx.body).then(updated => {
         if (updated) {
@@ -83,8 +81,8 @@ class CategoryController extends Controller {
    */
   async deleteCategory() {
     const { ctx } = this;
-    const ID = ctx.params.ID;
-    const result = await ctx.service.admin.category.delete(ID);
+    const cate_id = ctx.params.cate_id;
+    const result = await ctx.service.admin.category.delete(cate_id);
     if (result) {
       ctx.status = 200;
       ctx.body = {
