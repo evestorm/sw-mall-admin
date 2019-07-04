@@ -18,4 +18,8 @@ module.exports = app => {
   router.post('/admin/category/delete/:cate_id', jwt, controller.admin.category.deleteCategory);
   router.post('/admin/form/upload', jwt, controller.admin.form.upload);
   router.get('/admin/goods', jwt, controller.admin.goods.getGoodsList);
+  router.get('/admin/goods/detail/:ID', jwt, controller.admin.goods.getGoodsDetail);
+  router.post('/admin/goods/add', jwt, controller.admin.goods.addGoods);
+  router.post('/admin/goods/edit/:ID', jwt, controller.admin.goods.editGoods);
+  router.post('/admin/goods/delete/:ID', jwt, controller.admin.goods.deleteGoods);
 };

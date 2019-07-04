@@ -486,6 +486,46 @@ module.exports = FormController;
 
 TODO: 如果你还想了解前端部分的代码，可以[点击这里]()直达。
 
+### 利用 extend 生成随机32位字符串
+
+商品分类表中我们把「cate_id」设置为唯一标识，为了避免id重复，我们需要动态的为新分类生成一个32位的由数字和字母组成的cate_id，这里把该方法起名为 `getRandomStr` 放进 egg 的拓展功能中。
+
+首先在 `app` 下新建 `extend` 文件夹，并在其中创建 `helper.js` ：
+
+```js
+'use strict';
+
+// 外部可以通过 this.ctx.helper.getRandomStr() 调用
+// 模板中通过 helper.getRandomStr() 调用
+module.exports = {
+  getRandomStr(len) {
+    let str = '';
+    for (let i = 0; i < len; i++) {
+      str += Math.random().toString(36).substring(2);
+    }
+    return str.substring(0, len);
+  },
+};
+```
+
+最后在 `app/service/admin/category.js` 中调用：
+
+```js
+/**
+ * 新增一个分类
+ * @param {object} info 分类信息
+ * @return {boolean} 是否成功
+ */
+async add(info) {
+  // 生成随机32位「数字+字母」字符串
+  const cate_id = this.ctx.helper.getRandomStr(32);
+  const result = await this.app.mysql.insert('category', {
+    cate_id, ...info,
+  });
+  return result.affectedRows === 1;
+}
+```
+
 ## 编写商品详情接口
 
 这次我们来编写商品详情的接口，先从列表页开始，下面是前端页面展示效果：

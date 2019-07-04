@@ -16,7 +16,7 @@ class GoodsController extends Controller {
       ctx.status = 200;
       ctx.body = {
         code: 0,
-        message: '成功获取商品数据',
+        message: '成功获取商品列表',
         data: {
           allCount,
           results,
@@ -32,13 +32,35 @@ class GoodsController extends Controller {
   }
 
   /**
-   * 新增一个一级商品分类
+   *  根据ID获取一个商品详情
+   */
+  async getGoodsDetail() {
+    const { ctx } = this;
+    const results = await ctx.service.admin.goods.findOne(ctx.params.ID);
+    if (results) {
+      ctx.status = 200;
+      ctx.body = {
+        code: 0,
+        message: '成功获取商品数据',
+        data: {
+          results,
+        },
+      };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        code: 1,
+        message: '查询失败，请稍后重试！',
+      };
+    }
+  }
+
+  /**
+   * 新增一个商品
    */
   async addGoods() {
     const { ctx } = this;
     ctx.body = ctx.request.body;
-    // const {  } = ctx.body;
-    console.log(ctx.body);
     const result = await ctx.service.admin.goods.add(ctx.body);
     if (result) {
       ctx.status = 200;

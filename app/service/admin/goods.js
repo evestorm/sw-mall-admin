@@ -40,6 +40,7 @@ class GoodsService extends Service {
       `SELECT
         ID, SUB_ID, STATE, NAME, ORI_PRICE, PRESENT_PRICE, 
         AMOUNT, DETAIL, SALES_COUNT, IMAGE1, 
+        IS_RECOMMEND, 
         CREATE_TIME, UPDATE_TIME 
       FROM goods ${where} LIMIT ${start}, 15`);
     return {
@@ -55,10 +56,11 @@ class GoodsService extends Service {
    */
   async add(info) {
     // TODO: 测验直接写 info 会不会报错
-    const { SUB_ID, STATE, NAME, ORI_PRICE, PRESENT_PRICE, AMOUNT, DETAIL, SALES_COUNT, IMAGE1, CREATE_TIME, UPDATE_TIME, IS_RECOMMEND } = info;
-    const result = await this.app.mysql.insert('goods', {
-      SUB_ID, STATE, NAME, ORI_PRICE, PRESENT_PRICE, AMOUNT, DETAIL, SALES_COUNT, IMAGE1, CREATE_TIME, UPDATE_TIME, IS_RECOMMEND,
-    });
+    // 生成随机32位「数字+字母」字符串
+    const ID = this.ctx.helper.getRandomStr(32);
+    info.ID = ID;
+    // const { SUB_ID, STATE, NAME, ORI_PRICE, PRESENT_PRICE, AMOUNT, DETAIL, SALES_COUNT, IMAGE1, CREATE_TIME, UPDATE_TIME, IS_RECOMMEND } = info;
+    const result = await this.app.mysql.insert('goods', info);
     return result.affectedRows === 1;
   }
 

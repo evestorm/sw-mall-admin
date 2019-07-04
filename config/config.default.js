@@ -26,6 +26,7 @@ module.exports = appInfo => {
       user: 'root',
       password: 'root',
       database: 'sw-mall',
+      dateString: true,
     },
     app: true,
     agent: false,
