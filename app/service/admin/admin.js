@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const Service = require('egg').Service;
 
-class UserService extends Service {
+class AdminService extends Service {
   /**
    * 查询一个管理员
    * @param {string} email 邮箱
@@ -65,8 +65,8 @@ class UserService extends Service {
 
 
   /**
-   * 比较用户输入密码是否正确
-   * @param {string} pwd 用户输入密码
+   * 比较管理员输入密码是否正确
+   * @param {string} pwd 管理员输入密码
    * @param {string} hashpwd hash后的密码
    * @return {boolean} 是否匹配
    */
@@ -80,4 +80,4 @@ class UserService extends Service {
   }
 }
 
-module.exports = UserService;
+module.exports = AdminService;

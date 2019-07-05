@@ -137,12 +137,12 @@ router.get('/test', controller.home.test);
 
 整个项目需要两套接口，一套是提供给用户使用的商城App，一套是提供给后台管理员使用的管理系统（PC），为了区分它们，我将后台部分的API接口全部放进 `service` 下的 `admin` 文件夹。
 
-首先我们在 `app/service` 文件夹中新建 `admin` 文件夹，并在其中创建 `user.js` 文件，这里负责从数据库中查询管理员相关的数据，例如 `findOne` 方法可以根据「email」找到符合条件的管理员。目前我们仅需要实现下列方法：
+首先我们在 `app/service` 文件夹中新建 `admin` 文件夹，并在其中创建 `admin.js` 文件，这里负责从数据库中查询管理员相关的数据，例如 `findOne` 方法可以根据「email」找到符合条件的管理员。目前我们仅需要实现下列方法：
 
 - findOne（根据邮箱查找目标管理员）
 - add（添加一个新管理员）
 
-具体代码见 `app/service/admin/user.js` ，这里不再赘述。
+具体代码见 `app/service/admin/admin.js` ，这里不再赘述。
 
 ### 安装 bcrypt 和 gravatar
 
@@ -156,7 +156,7 @@ npm i bcrypt gravatar
 
 ### 在 Controller 中编写注册逻辑
 
-首先在 `controller` 文件夹下新建 `admin` 文件夹并创建 `user.js`，然后在其中引入刚刚安装的两个包：
+首先在 `controller` 文件夹下新建 `admin` 文件夹并创建 `admin.js`，然后在其中引入刚刚安装的两个包：
 
 ```js
 const bcrypt = require('bcrypt');
@@ -170,7 +170,7 @@ async register() {
   const { ctx } = this;
   ctx.body = ctx.request.body;
   // 判断邮箱是否已经注册过
-  const user = await ctx.service.admin.user.findOne(ctx.body.email);
+  const admin = await ctx.service.admin.admin.findOne(ctx.body.email);
   if (user) {
     ctx.status = 400;
     ctx.body = {
@@ -188,11 +188,11 @@ async register() {
     const avatar = gravatar.url(email, {
       s: '200', r: 'pg', d: 'mm',
     });
-    const result = await ctx.service.admin.user.add({
+    const result = await ctx.service.admin.admin.add({
       name, email, password, avatar, role,
     });
     if (result) {
-      const { user } = await ctx.service.admin.user.findOne(email);
+      const { user } = await ctx.service.admin.admin.findOne(email);
       ctx.status = 200;
       ctx.body = {
         code: 0,
@@ -237,11 +237,11 @@ async login() {
   const { ctx } = this;
   const { email, password } = ctx.request.body;
   // 根据email查找该管理员
-  const user = await ctx.service.admin.user.findOne(email);
+  const user = await ctx.service.admin.admin.findOne(email);
   if (user) {
     const hashpwd = user.password;
     // 比对密码是否一致，一致则生成 token 登录成功
-    await ctx.service.admin.user.comparePassword(password, hashpwd).then(isMatch => {
+    await ctx.service.admin.admin.comparePassword(password, hashpwd).then(isMatch => {
       if (isMatch) {
         const { id, name, avatar, role } = user;
         const rule = { id, name, avatar, role };
@@ -291,7 +291,7 @@ async login() {
   返回用户不存在信息
 ```
 
-完成登录接口的编写后，你可以访问 `127.0.0.1:7000/admin/login` 接口进行登录，登录成功后API会返回token给你，然后你就可以带着这个token来请求当前登录用户的个人数据了。请求个人数据的接口我们定义为 `admin/user` ，该API接收一个 jwt ，当 jwt 存在并且没有过期时，该API返回用户的个人数据，下面我们就来编写这个接口。
+完成登录接口的编写后，你可以访问 `127.0.0.1:7000/admin/login` 接口进行登录，登录成功后API会返回token给你，然后你就可以带着这个token来请求当前登录用户的个人数据了。请求个人数据的接口我们定义为 `admin/admin` ，该API接收一个 jwt ，当 jwt 存在并且没有过期时，该API返回用户的个人数据，下面我们就来编写这个接口。
 
 ## 使用 passport-jwt 验证 token 的有效性
 
@@ -333,7 +333,7 @@ module.exports = app => {
   // admin
   ...
   // 配置路由
-  router.get('/admin/user', jwt, controller.admin.user.user);
+  router.get('/admin/user', jwt, controller.admin.admin.user);
 };
 ```
 
@@ -368,9 +368,9 @@ p.s. 想要了解更多 passport-jwt 的使用方法，可以点击[此处](http
 
 至此，我们就完成了所有的配置。
 
-### 在 Controller 中编写 user 方法
+### 在 Controller 中编写 admin 方法
 
-最后我们就可以在 `app/controller/admin/user.js` 文件下编写 `user` 方法了：
+最后我们就可以在 `app/controller/admin/admin.js` 文件下编写 `admin` 方法了：
 
 ```js
 async user() {
@@ -399,6 +399,17 @@ async user() {
   ![获取管理员信息](./screenshots/获取管理员信息.png)
 
 搞定~
+
+## 编写首页接口
+
+首页主要展示4项信息：
+
+- 商城总访问量
+- 本周新注册用户
+- 本周商品上新数量
+- 销量前十的商品柱状图（EChartJS）
+
+我们在 `app/controller/admin` 目录下新建 `site.js` 文件，用来编写首页信息返回的业务逻辑。同时在 `app/service/admin` 目录下新建 `site.js` 文件，用来编写访问数据库的代码。最后在 `app/router.js` 中编写路由。具体代码就不贴了，可以在上述各文件中查看~
 
 ## 编写一级分类接口
 

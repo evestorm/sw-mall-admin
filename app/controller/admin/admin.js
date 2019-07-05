@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 
-class UserController extends Controller {
+class AdminController extends Controller {
 
   /**
    *  登录
@@ -14,13 +14,13 @@ class UserController extends Controller {
     const { ctx } = this;
     const { email, password } = ctx.request.body;
     // 根据email查找该管理员
-    const user = await ctx.service.admin.user.findOne(email);
-    if (user) {
-      const hashpwd = user.password;
+    const admin = await ctx.service.admin.admin.findOne(email);
+    if (admin) {
+      const hashpwd = admin.password;
       // 比对密码是否一致，一致生成 token 登录成功
-      await ctx.service.admin.user.comparePassword(password, hashpwd).then(isMatch => {
+      await ctx.service.admin.admin.comparePassword(password, hashpwd).then(isMatch => {
         if (isMatch) {
-          const { id, name, avatar, role } = user;
+          const { id, name, avatar, role } = admin;
           const rule = { id, name, avatar, role };
           // jwt.sign('规则', '加密名字', '过期时间')
           const token = jwt.sign(rule, 'lance', { expiresIn: '3600s' });
@@ -61,8 +61,8 @@ class UserController extends Controller {
     const { ctx } = this;
     ctx.body = ctx.request.body;
     // 判断邮箱是否已经注册过
-    const user = await ctx.service.admin.user.findOne(ctx.body.email);
-    if (user) {
+    const admin = await ctx.service.admin.admin.findOne(ctx.body.email);
+    if (admin) {
       ctx.status = 400;
       ctx.body = {
         code: 1,
@@ -79,16 +79,16 @@ class UserController extends Controller {
       const avatar = gravatar.url(email, {
         s: '200', r: 'pg', d: 'mm',
       });
-      const result = await ctx.service.admin.user.add({
+      const result = await ctx.service.admin.admin.add({
         name, email, password, avatar, role,
       });
       if (result) {
-        const { user } = await ctx.service.admin.user.findOne(email);
+        const { admin } = await ctx.service.admin.admin.findOne(email);
         ctx.status = 200;
         ctx.body = {
           code: 0,
           message: '恭喜你，注册成功！',
-          data: user,
+          data: admin,
         };
       } else {
         ctx.status = 200;
@@ -100,7 +100,7 @@ class UserController extends Controller {
     }
   }
 
-  async user() {
+  async admin() {
     const { ctx } = this;
     // 使用 ctx.isAuthenticated() 判断是否登录。
     if (ctx.isAuthenticated()) {
@@ -115,4 +115,4 @@ class UserController extends Controller {
   }
 }
 
-module.exports = UserController;
+module.exports = AdminController;

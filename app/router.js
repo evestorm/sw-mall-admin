@@ -9,9 +9,10 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.get('/test', controller.home.test);
   // admin
-  router.post('/admin/login', controller.admin.user.login);
-  router.post('/admin/register', controller.admin.user.register);
-  router.get('/admin/user', jwt, controller.admin.user.user);
+  router.post('/admin/login', controller.admin.admin.login);
+  router.post('/admin/register', controller.admin.admin.register);
+  router.get('/admin/user', jwt, controller.admin.admin.admin);
+  router.get('/admin/siteinfo', jwt, controller.admin.site.getSiteInfo);
   router.get('/admin/category', jwt, controller.admin.category.getCategoryList);
   router.post('/admin/category/add', jwt, controller.admin.category.addCategory);
   router.post('/admin/category/edit/:cate_id', jwt, controller.admin.category.editCategory);
