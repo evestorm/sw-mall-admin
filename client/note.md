@@ -162,6 +162,10 @@ d config files
     position: absolute;
   }
 
+  .el-input__prefix {
+    color: black !important;
+  }
+
   a {
     text-decoration: none;
     color: black;
