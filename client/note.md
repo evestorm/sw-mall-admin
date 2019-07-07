@@ -1116,3 +1116,25 @@ components: {
 ```
 
 这样我们就实现了动态路由导航。
+
+#### 解决手动更改路由侧边栏高亮消失问题
+
+当用户手动键入 `localhost:8080/goodslist` 时，页面确实能够正确跳转商品列表页并展示，然而侧边栏的“商品列表”字样却并没有被高亮。
+
+为了解决这个问题，我们可以利用 `element-ui` 的 [NavMenu](https://element.eleme.cn/#/zh-CN/component/menu#menu-attribute) 导航自带的 router 属性来配置默认的高亮状态，示例代码如下：
+
+```html
+<template>
+  <!-- 1. 设置 default-active（当前激活菜单的 index）为当前路由的path -->
+  <!-- 2. 添加 router 属性来使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转 -->
+  <el-menu class="left-wrapper" :default-active="$route.path" router ...>
+    <!-- 3. 以下方设置 index="/index" 为例，当用户键入 `localhost:8080/index` 时，$route.path 为 '/index' 与此处的 index 值相匹配，所以会被设置高亮 -->
+    <el-menu-item index="/index">
+      ...
+    </el-menu-item>
+    ...
+  </el-menu>
+</template>
+```
+
+想要查看完整的配置，可以进入 `src/components/LeftMenu.vue` 中查看。
