@@ -621,3 +621,5 @@ async findAllByFilter(filter) {
   };
 }
 ```
+
+至此我们的后台管理系统的接口就全部编写完毕了，接下来你可以[点击此处](./client/note.md)查看前端部分的编写过程。
