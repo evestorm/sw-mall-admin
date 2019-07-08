@@ -61,18 +61,6 @@ class CategoryService extends Service {
     console.log(result);
     return result.affectedRows === 1;
   }
-
-  /* ======================================== */
-
-  // /**
-  //  * 查询一个二级商品分类
-  //  * @param {string} ID 分类ID
-  //  * @return {object} 管理员信息
-  //  */
-  // async subFindOne(ID) {
-  //   const user = await this.app.mysql.get('category_sub', { ID });
-  //   return user;
-  // }
 }
 
 module.exports = CategoryService;

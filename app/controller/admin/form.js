@@ -25,9 +25,13 @@ class FormController extends Controller {
       await sendToWormhole(stream);
       throw err;
     }
+    const baseURL = this.app.config.env === 'prod'
+      ? 'http://mall.evelance.cn:7001/'
+      : 'http://localhost:7001/';
+
     this.ctx.body = {
       code: 0,
-      data: 'http://localhost:7001/public/admin/image/' + filename,
+      data: `${baseURL}public/admin/image/${filename}`,
       msg: '上传成功',
     };
   }

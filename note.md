@@ -624,7 +624,52 @@ async findAllByFilter(filter) {
 
 至此我们的后台管理系统的接口就全部编写完毕了，接下来你可以[点击此处](./client/note.md)查看前端部分的编写过程。
 
-## 最后收尾
+## 优化
+
+### sql防注入
+
+在之前商品列表查询页中，我们后端mysql的语句采用了字符串拼接的方式，而这种方式容易导致sql注入，所以这里将改为每个?匹配一个参数的方式：
+
+> app/service/admin/goods.js
+
+```js
+/**
+ * 查询符合条件的商品
+ * @param {object} filter 前端传过来的参数
+ * @return {object} 商品列表
+ */
+async findAllByFilter(filter) {
+  ...
+
+  let where = '';
+  const arr = [];
+
+  where += 'WHERE SUB_ID = ?';
+  arr.push(SUB_ID);
+  if (keywords !== '') {
+    where += " AND NAME LIKE CONCAT('%', ?, '%')";
+    arr.push(keywords);
+  }
+  if (stime !== '' && etime !== '') {
+    where += ' AND CREATE_TIME BETWEEN ? AND ?';
+    arr.push(stime, etime);
+  }
+
+  // 查询符合条件的总条数
+  const allCount = await this.app.mysql.query(`SELECT COUNT(*) AS allCount FROM goods ${where}`, arr);
+  // 查询符合条件的15条
+  const results = await this.app.mysql.query(
+    `SELECT
+      ID, SUB_ID, STATE, NAME, ORI_PRICE, PRESENT_PRICE, 
+      AMOUNT, DETAIL, SALES_COUNT, IMAGE1, 
+      IS_RECOMMEND, 
+      CREATE_TIME, UPDATE_TIME 
+    FROM goods ${where} LIMIT ${start}, 15`, arr);
+  ...
+}
+```
+
+## 上线
 
 完成项目开发后我们还需要进行上线，这里有个操作务必要执行，那就是解决跨域问题。有小伙伴会说跨域问题不是已经在前端做了代理么解决了吗？为什么还要配置。这是因为前端的代理配置只适用于开发环境，vue项目通过 `npm run serve` 启动后是会在后台启一个node服务器的，api的请求是该服务器帮我们代为转发的，然而一旦我们把前端代码打包成静态资源，就没有“人”能帮我们代为转发了，所以还是会出现跨域问题。说完了为什么做，下面就是怎么做了。
 
@@ -654,6 +699,23 @@ config.cors = {
 ```
 
 此时再上传我们整个项目，然后在服务器的该项目目录的终端下执行 `npm run dev` 就能开启服务，让前端正常请求道接口提供的数据了。
+
+最后的最后，我们还需要对上传接口进行改造，还记得之前我们上传成功后返回给前端了一个图片路径吗？它被设置成了 "http://localhost:7001" 开头，这个链接如果直接单拎出来是无法访问到的，所以生产环境下我们需要把它替换成你自己的域名，修改代码如下：
+
+```js
+...
+const baseURL = this.app.config.env === 'prod'
+  ? 'http://mall.evelance.cn:7001/'
+  : 'http://localhost:7001/';
+
+this.ctx.body = {
+  code: 0,
+  data: `${baseURL}public/admin/image/${filename}`,
+  msg: '上传成功',
+};
+```
+
+最后在生产环境下，我们就不采用 `npm run dev` 来启动项目了，而改用：`egg_server_env=prod npm start`。
 
 p.s. 前端代码的上线流程见 `client/note.md` 的最后部分。
 

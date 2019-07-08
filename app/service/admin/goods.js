@@ -25,16 +25,22 @@ class GoodsService extends Service {
     const start = (page - 1) * 15;
 
     let where = '';
-    where += `WHERE SUB_ID = '${SUB_ID}'`;
-    where += keywords !== '' ?
-      ` AND NAME LIKE '%${keywords}%'` : '';
-    where += stime !== '' && etime !== '' ?
-      ` AND CREATE_TIME BETWEEN '${stime}' AND '${etime}'` : '';
+    const arr = [];
 
+    where += 'WHERE SUB_ID = ?';
+    arr.push(SUB_ID);
+    if (keywords !== '') {
+      where += " AND NAME LIKE CONCAT('%', ?, '%')";
+      arr.push(keywords);
+    }
+    if (stime !== '' && etime !== '') {
+      where += ' AND CREATE_TIME BETWEEN ? AND ?';
+      arr.push(stime, etime);
+    }
     console.log(where);
 
     // 查询符合条件的总条数
-    const allCount = await this.app.mysql.query(`SELECT COUNT(*) AS allCount FROM goods ${where}`);
+    const allCount = await this.app.mysql.query(`SELECT COUNT(*) AS allCount FROM goods ${where}`, arr);
     // 查询符合条件的15条
     const results = await this.app.mysql.query(
       `SELECT
@@ -42,7 +48,7 @@ class GoodsService extends Service {
         AMOUNT, DETAIL, SALES_COUNT, IMAGE1, 
         IS_RECOMMEND, 
         CREATE_TIME, UPDATE_TIME 
-      FROM goods ${where} LIMIT ${start}, 15`);
+      FROM goods ${where} LIMIT ${start}, 15`, arr);
     return {
       allCount: allCount[0].allCount,
       results,

@@ -48,9 +48,13 @@ export default {
   data () {
     return {
       init: {
-        language_url: '/tinymce/langs/zh_CN.js',
+        // 本人后台管理系统放在域名下的 `/admin` 目录，
+        // 所以加上了 `/admin` 前缀，读者如果不需要则解开下面两行注释了的代码，并注释掉与之相关的两行带有admin的代码
+        // language_url: '/tinymce/langs/zh_CN.js',
+        language_url: '/admin/tinymce/langs/zh_CN.js',
         language: 'zh_CN',
-        skin_url: '/tinymce/skins/ui/oxide',
+        // skin_url: '/tinymce/skins/ui/oxide',
+        skin_url: '/admin/tinymce/skins/ui/oxide',
         // skin_url: '/tinymce/skins/ui/oxide-dark',//暗色系
         height: 300,
         plugins: this.plugins,
