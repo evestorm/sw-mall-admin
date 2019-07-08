@@ -1,5 +1,6 @@
 module.exports = {
   publicPath: '/', // 根域上下文目录
+  // publicPath: '/admin/', // 我自己服务器该项目的结构是 `mall.evelance.cn` 访问前端商城，通过 `mall.evelance.cn/admin` 来访问后台管理系统，所以此处加上了 `/admin` ，如果你没有此需求，可以忽略此配置
   outputDir: 'dist', // 构建输出目录
   assetsDir: 'assets', // 静态资源目录 (js, css, img, fonts)
   devServer: {
