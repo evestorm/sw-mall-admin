@@ -32,6 +32,12 @@ module.exports = appInfo => {
     agent: false,
   };
 
+  // 配置跨域（如果把项目放服务器得把127.0.0.1换成你的域名，端口号一般需要换成默认的80）
+  config.cors = {
+    origin: 'http://127.0.0.1:8080',
+    credentials: true,
+  };
+
   // 配置公共访问目录
   // config.static = {
   //   prefix: '/public/',

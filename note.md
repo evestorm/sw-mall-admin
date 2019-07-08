@@ -623,3 +623,43 @@ async findAllByFilter(filter) {
 ```
 
 至此我们的后台管理系统的接口就全部编写完毕了，接下来你可以[点击此处](./client/note.md)查看前端部分的编写过程。
+
+## 最后收尾
+
+完成项目开发后我们还需要进行上线，这里有个操作务必要执行，那就是解决跨域问题。有小伙伴会说跨域问题不是已经在前端做了代理么解决了吗？为什么还要配置。这是因为前端的代理配置只适用于开发环境，vue项目通过 `npm run serve` 启动后是会在后台启一个node服务器的，api的请求是该服务器帮我们代为转发的，然而一旦我们把前端代码打包成静态资源，就没有“人”能帮我们代为转发了，所以还是会出现跨域问题。说完了为什么做，下面就是怎么做了。
+
+首先下载 egg-cors 包：
+
+```shell
+npm i egg-cors
+```
+
+然后在 `config/plugin.js` 中设置开启cors：
+
+```js
+cors: {
+  enable: true,
+  package: 'egg-cors',
+},
+```
+
+最后在 `config/config.default.js` 中配置：
+
+```js
+// 配置跨域（如果把项目放服务器得把127.0.0.1换成你的域名，端口号一般需要换成默认的80）
+config.cors = {
+  origin: 'http://127.0.0.1:8080',
+  credentials: true,
+};
+```
+
+此时再上传我们整个项目，然后在服务器的该项目目录的终端下执行 `npm run dev` 就能开启服务，让前端正常请求道接口提供的数据了。
+
+p.s. 前端代码的上线流程见 `client/note.md` 的最后部分。
+
+## 资源
+
+如果你想要了解如何购买服务器以及 nginx 配置情况，可以参考下面我的博客：
+
+- [阿里云云服务器ECS购买与使用（笔记）](https://evestorm.github.io/posts/58410/)
+- [ubuntu下nginx基本使用](https://evestorm.github.io/posts/36876/)

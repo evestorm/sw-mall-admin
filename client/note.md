@@ -1142,3 +1142,35 @@ components: {
 ```
 
 想要查看完整的配置，可以进入 `src/components/LeftMenu.vue` 中查看。
+
+### 上线
+
+完成后台管理系统的前端页面开发后，我们就需要把项目打包上传到服务器上。下面是必要的一些配置和操作：
+
+1. 配置线上环境的API接口
+
+我们来到 `src/api/index.js` 页面，配置 baseURL ：
+
+  ```js
+  // 这是开发环境和线上环境的接口配置
+  const baseURL = process.env.NODE_ENV === 'production'
+    ? 'http://mall.evelance.cn:7001/admin/'
+    : 'http://localhost:7001/admin/'
+  ```
+
+  解释：当我们在本地开发时，会使用 `npm run serve` 启动项目，此时的环境变量 NODE_ENV 的值为「development」，而我们打包会执行 `npm run build` ，此时的环境变量就变为了「production」。
+
+2. 打包
+
+  在终端执行下面命令：
+
+  ```shell
+  cd client/
+  npm run build
+  ```
+
+  执行完毕后会在 `client` 目录下生产dist文件夹，里面就是我们打包后的静态资源。
+
+3. 上传服务器
+
+  将打包好的dist目录下的文件上传到你自己的服务器上就OK了。

@@ -32,9 +32,9 @@ export default {
   data() {
     return {
       topList: [
-        { icon: 'el-icon-s-home', key: 'pv', name: '总访问量', num: 2800, color: '#40c9c6' },
-        { icon: 'el-icon-user-solid', key: 'regUsers', name: '周注册用户', num: 23, color: '#36a3f7' },
-        { icon: 'el-icon-s-shop', key: 'newGoodsNum', name: '周商品上新', num: 14, color: '#f4516c' }
+        { icon: 'el-icon-s-home', key: 'pv', name: '总访问量', num: 0, color: '#40c9c6' },
+        { icon: 'el-icon-user-solid', key: 'regUsers', name: '周注册用户', num: 0, color: '#36a3f7' },
+        { icon: 'el-icon-s-shop', key: 'newGoodsNum', name: '周商品上新', num: 0, color: '#f4516c' }
       ], // 顶部四栏数据
       top10: [] // 商品销量前十
     }
