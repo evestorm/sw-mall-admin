@@ -32,7 +32,7 @@ module.exports = appInfo => {
     agent: false,
   };
 
-  // 配置跨域（如果把项目放服务器得把127.0.0.1换成你的域名，端口号一般需要换成默认的80）
+  // 配置跨域（上线后把下方 orign 改为你的域名，例如 http://mall.evelance.cn）
   config.cors = {
     origin: 'http://127.0.0.1:8080',
     credentials: true,

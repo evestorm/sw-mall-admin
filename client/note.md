@@ -1160,7 +1160,23 @@ components: {
 
   解释：当我们在本地开发时，会使用 `npm run serve` 启动项目，此时的环境变量 NODE_ENV 的值为「development」，而我们打包会执行 `npm run build` ，此时的环境变量就变为了「production」。
 
-2. 打包
+2. 配置 TinymceEditor 中的路径
+
+我们来到 `src/components/TinymceEditor.vue` 中，还需要重新配置下 init 对象的文件路径，因为本人后台管理系统放在域名下的 `/admin` 目录，所以需要加上 `/admin` 前缀，如果你没有这个需求，则不用更改该文件代码：
+
+  ```js
+  init: {
+    // 本人后台管理系统放在域名下的 `/admin` 目录，
+    // 所以加上了 `/admin` 前缀，读者如果不需要则解开下面两行注释了的代码，并注释掉与之相关的两行带有admin的代码
+    // language_url: '/tinymce/langs/zh_CN.js',
+    language_url: '/admin/tinymce/langs/zh_CN.js',
+    language: 'zh_CN',
+    // skin_url: '/tinymce/skins/ui/oxide',
+    skin_url: '/admin/tinymce/skins/ui/oxide',
+  }
+  ```
+
+3. 打包
 
   在终端执行下面命令：
 
@@ -1171,6 +1187,6 @@ components: {
 
   执行完毕后会在 `client` 目录下生产dist文件夹，里面就是我们打包后的静态资源。
 
-3. 上传服务器
+4. 上传服务器
 
   将打包好的dist目录下的文件上传到你自己的服务器上就OK了。

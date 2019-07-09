@@ -1,7 +1,6 @@
 import { request } from './request'
 
 // 这是开发环境和线上环境的接口配置
-console.log(process.env.NODE_ENV)
 const baseURL = process.env.NODE_ENV === 'production'
   ? 'http://mall.evelance.cn:7001/admin/'
   : 'http://localhost:7001/admin/'

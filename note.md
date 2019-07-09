@@ -691,9 +691,8 @@ cors: {
 最后在 `config/config.default.js` 中配置：
 
 ```js
-// 配置跨域（如果把项目放服务器得把127.0.0.1换成你的域名，端口号一般需要换成默认的80）
 config.cors = {
-  origin: 'http://127.0.0.1:8080',
+  origin: 'http://mall.swlance.cn',
   credentials: true,
 };
 ```
