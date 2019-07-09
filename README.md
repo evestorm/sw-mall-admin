@@ -4,7 +4,24 @@
 
 一款在线商城的后台管理系统项目。后端采用 Egg + MySQL ，前端采用 Vue + Element 。
 
-## 启动
+## 线上链接
+
+- [前台商城]()
+- [后台管理系统](http://mall.evelance.cn/admin)
+
+## 使用
+
+### 准备工作
+
+找到 `client/src/components/TinymceEditor.vue` 中的 「language_url」和「skin_url」字段，将路径中的 "/admin" 字样去掉。
+
+下载[此sql文件](sw-mall.sql)将其导入你自己的mysql文件中。
+
+### 安装
+
+分别在根目录和 `client` 目录下执行 `npm install` 安装所需要的包。
+
+### 启动
 
 启动 egg ：
 
@@ -12,7 +29,7 @@
 npm run dev
 ```
 
-启动 vue：
+启动 vue ：
 
 ```shell
 cd client

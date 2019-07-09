@@ -32,9 +32,9 @@ module.exports = appInfo => {
     agent: false,
   };
 
-  // 配置跨域（上线后把下方 orign 改为你的域名，例如 http://mall.evelance.cn）
+  // 配置跨域（上线后把下方 origin 改为你的域名，例如 http://mall.evelance.cn）
   config.cors = {
-    origin: 'http://127.0.0.1:8080',
+    origin: 'http://localhost:8080',
     credentials: true,
   };
 

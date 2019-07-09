@@ -33,7 +33,7 @@ p.s. 上述初始化过程请科学上网。而且有可能仍然失败，如果
 个人习惯于使用 mysql 数据库，而且 egg 也提供了插件供我们使用，所以为了方便，使用 egg-mysql 来对数据库进行操作，首先来安装它 [egg-mysql](https://github.com/eggjs/egg-mysql) ：
 
 ```shell
-$ npm i egg-mysql
+npm i egg-mysql
 ```
 
 然后在 `config/plugin.js` 中开启插件：
@@ -64,7 +64,16 @@ config.mysql = {
 
 ### 导入数据库文件
 
-我已经把本地的数据库导出为 [sw-mall.sql](#) 文件，需要各位自行导入到本地的 mysql 中。
+我已经把本地的数据库导出为 [sw-mall.sql](sw-mall.sql) 文件，需要各位自行导入到本地的 mysql 中。
+
+#### 数据库结构
+
+- admin 管理员表
+- category 一二级分类表
+- comments 用户评论表
+- goods 商品表
+- site_info 网站信息表
+- user 用户表
 
 ### 测试数据库连接
 
@@ -495,7 +504,7 @@ class FormController extends Controller {
 module.exports = FormController;
 ```
 
-TODO: 如果你还想了解前端部分的代码，可以[点击这里]()直达。
+TODO: 如果你还想了解前端部分的代码，可以[点击这里](https://github.com/evestorm/sw-mall-admin/blob/master/client/note.md#%E5%95%86%E5%93%81%E4%B8%80%E7%BA%A7%E5%88%86%E7%B1%BB%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5)直达。
 
 ### 利用 extend 生成随机32位字符串
 
@@ -541,7 +550,7 @@ async add(info) {
 
 这次我们来编写商品详情的接口，先从列表页开始，下面是前端页面展示效果：
 
-![商品详情列表](./screenshots/商品详情列表.png)
+![商品详情列表](https://raw.githubusercontent.com/evestorm/sw-mall-admin/master/screenshots/%E5%95%86%E5%93%81%E8%AF%A6%E6%83%85%E5%88%97%E8%A1%A8.png?token=AEKNNA4D5A6GADYWGD4RECS5ERIPS)
 
 和之前的一级分类接口一样，首先得配置路由，然后分别在 「Controller」和「Service」 中创建相应文件... 由于步骤类似就不展示代码了，自己可以在下面几个文件中查看：
 
