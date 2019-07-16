@@ -74,6 +74,7 @@ config.mysql = {
 - goods 商品表
 - site_info 网站信息表
 - user 用户表
+- adverts 广告+banner
 
 ### 测试数据库连接
 
@@ -632,6 +633,72 @@ async findAllByFilter(filter) {
 ```
 
 至此我们的后台管理系统的接口就全部编写完毕了，接下来你可以[点击此处](./client/note.md)查看前端部分的编写过程。
+
+## 提供客户端商城接口
+
+### 首页
+
+首页所需数据结构如下：
+
+```json
+{
+  "data": {
+    "adverts": {
+      "image": "...",
+      "link": "..."
+    },
+    "floorName": {
+      "floor1": "休闲食品",
+      "floor2": "新鲜水果",
+      "floor3": "营养奶品"
+    },
+    "floor1": [{
+      "goodsId": "...",
+      "image": "..."
+    },...],
+    "floor2": [{
+      "goodsId": "...",
+      "image": "..."
+    },...],
+    "floor3": [{
+      "goodsId": "...",
+      "image": "..."
+    },...],
+    "slides": [{
+      "image": "...",
+      "goodsId": "..."
+    },...],
+    "hotGoods": [{
+      "mallPrice": 3.90,
+      "image": "...",
+      "goodsId": "...",
+      "price": 3.90,
+      "name": "..."
+    },...],
+    "recommend": [{
+      "image": "...",
+      "mallPrice": 16.80,
+      "goodsId": "...",
+      "price": 16.80,
+      "goodsName": "..."
+    },...]
+  }
+}
+```
+
+创建 `app/service/adverts.js` 文件提供查询广告+banner数据的服务。
+
+由于商品查询已经service文件已经在 `admin` 文件夹创建过了，所以手机端商城的查询服务也在 `app/service/admin/category.js` 中新增。具体代码在该文件中查看。
+
+然后到 `app/controller/home.js` 文件中编写查询接口。
+
+最后在 `app/router.js` 中配置首页查询接口：
+
+```js
+// 商城
+router.get('/', controller.home.index);
+router.get('/index', controller.home.index);
+```
 
 ## 优化
 

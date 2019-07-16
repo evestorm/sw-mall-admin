@@ -97,6 +97,78 @@ class GoodsService extends Service {
     console.log(result);
     return result.affectedRows === 1;
   }
+
+  // ================手机商城特有===================
+  /**
+   * 根据一级分类查找符合条件的商品给首页不规则矩形部分
+   * @param {number} id 一级分类
+   * @return {array} 商品数组
+   * @memberof GoodsService
+   */
+  async findGoodsByCategoryID(id) {
+    // 查询条件：一级分类id，推荐产品，商品类型为1
+    // 先查符合条件的所有二级分类
+    const subCateIDs = await this.app.mysql.select('category', {
+      where: {
+        parent_id: id,
+      },
+    });
+    const ids = subCateIDs.map(v => v.cate_id);
+    // 根据二级分类查找符合条件商品
+    const goodsList = await this.app.mysql.select('goods', {
+      where: {
+        SUB_ID: ids,
+        GOOD_TYPE: 1,
+      },
+      orders: [[ 'CREATE_TIME', 'asc' ]],
+    });
+    return goodsList.map(v => {
+      return {
+        goodsId: v.ID,
+        image: v.IMAGE5,
+      };
+    });
+  }
+
+  /**
+   * 热门商品
+   * @return {array} 商品数组
+   */
+  async findHotGoods() {
+    // 根据二级分类查找符合条件商品
+    const goodsList = await this.app.mysql.select('goods', {
+      where: { GOOD_TYPE: 2 },
+    });
+    return goodsList.map(v => {
+      return {
+        mallPrice: v.ORI_PRICE,
+        image: v.IMAGE1,
+        goodsId: v.ID,
+        price: v.PRESENT_PRICE,
+        name: v.NAME,
+      };
+    });
+  }
+
+  /**
+   * 推荐商品
+   * @return {array} 商品数组
+   */
+  async findRecommendGoods() {
+    // 根据二级分类查找符合条件商品
+    const goodsList = await this.app.mysql.select('goods', {
+      where: { IS_RECOMMEND: 1 },
+    });
+    return goodsList.map(v => {
+      return {
+        mallPrice: v.ORI_PRICE,
+        image: v.IMAGE1,
+        goodsId: v.ID,
+        price: v.PRESENT_PRICE,
+        name: v.NAME,
+      };
+    });
+  }
 }
 
 module.exports = GoodsService;
