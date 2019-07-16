@@ -31,10 +31,10 @@ class HomeController extends Controller {
     const recommend = await ctx.service.admin.goods.findRecommendGoods();
     // 热门（GOOD_TYPE=2）
     const hotGoods = await ctx.service.admin.goods.findHotGoods();
-    if (adverts) {
+    if (adverts && floor1 && floor2 && floor3 && recommend && hotGoods) {
       ctx.body = {
         code: 0,
-        message: '成功获取广告数据',
+        message: '成功获取数据',
         data: {
           adverts: adv,
           floor1,
@@ -54,7 +54,7 @@ class HomeController extends Controller {
       ctx.status = 500;
       ctx.body = {
         code: 1,
-        message: '查询失败，请稍后重试',
+        message: '获取数据失败，请稍后重试',
       };
     }
   }
