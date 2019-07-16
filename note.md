@@ -383,7 +383,7 @@ p.s. 想要了解更多 passport-jwt 的使用方法，可以点击[此处](http
 最后我们就可以在 `app/controller/admin/admin.js` 文件下编写 `admin` 方法了：
 
 ```js
-async user() {
+async admin() {
   const { ctx } = this;
   // 使用 ctx.isAuthenticated() 判断是否登录。
   if (ctx.isAuthenticated()) {
@@ -398,13 +398,13 @@ async user() {
 }
 ```
 
-现在我们使用 Postman 来测试 `admin/user` 这个 API 能否正常工作：
+现在我们使用 Postman 来测试 `admin/admin` 这个 API 能否正常工作：
 
 1. 首先通过 `admin/login` 接口获取 token：
 
   ![获取token](./screenshots/获取token.png)
 
-2. 带着 token 请求 `admin/user` 接口获取管理员个人信息：
+2. 带着 token 请求 `admin/admin` 接口获取管理员个人信息：
 
   ![获取管理员信息](./screenshots/获取管理员信息.png)
 
@@ -698,6 +698,41 @@ async findAllByFilter(filter) {
 // 商城
 router.get('/', controller.home.index);
 router.get('/index', controller.home.index);
+```
+
+### 登录注册
+
+商城的登录注册逻辑和后台管理系统的一样，只不过查询的表不同，这次是 `user` 表。具体代码见：
+
+- `app/controller/user.js`
+- `app/service/user.js`
+- `app/router.js`
+
+这里要提的一点是，为了判断前端的请求是由 `商城App` 发出的还是 `后台管理系统` 发出的，我们需要在 `app.js` 中做一层判断：
+
+```js
+module.exports = app => {
+  app.on('request', ctx => {
+    app.passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+      // 鉴权后台管理系统
+      if (ctx.request.url.indexOf('/admin') > -1) {
+        app.mysql.get('admin', { id: jwt_payload.id }).then(user => {
+          if (user) {
+            return done(null, user);
+          }
+          return done(null, false);
+        }).catch(err => console.log(err));
+      } else { // 鉴权前台商城App
+        app.mysql.get('user', { id: jwt_payload.id }).then(user => {
+          if (user) {
+            return done(null, user);
+          }
+          return done(null, false);
+        }).catch(err => console.log(err));
+      }
+    }));
+  });
+};
 ```
 
 ## 优化

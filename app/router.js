@@ -9,6 +9,9 @@ module.exports = app => {
   // 商城
   router.get('/', controller.home.index);
   router.get('/index', controller.home.index);
+  router.post('/login', controller.user.login);
+  router.post('/register', controller.user.register);
+  router.get('/user', jwt, controller.user.user);
   // 后台管理
   router.post('/admin/login', controller.admin.admin.login);
   router.post('/admin/register', controller.admin.admin.register);
