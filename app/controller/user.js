@@ -90,7 +90,7 @@ class UserController extends Controller {
           data: user,
         };
       } else {
-        ctx.status = 200;
+        ctx.status = 500;
         ctx.body = {
           code: 1,
           message: '注册失败，请稍后重试',
