@@ -169,6 +169,21 @@ class GoodsService extends Service {
       };
     });
   }
+
+  /**
+   * 查询当前二级分类下特定页码的商品列表
+   * @param {*} filter 查询条件
+   * @return {array} 商品数组
+   */
+  async findGoodsByCategorySubID(filter) {
+    const { SUB_ID, start, num } = filter;
+    const goodsList = await this.app.mysql.select('goods', {
+      where: { SUB_ID },
+      limit: num,
+      offset: start,
+    });
+    return goodsList;
+  }
 }
 
 module.exports = GoodsService;

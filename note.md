@@ -735,6 +735,21 @@ module.exports = app => {
 };
 ```
 
+### 商品列表页
+
+暴露给前端的接口路由：
+
+```js
+router.post('/goods/list', jwt, controller.admin.goods.getGoodsListByCategorySubID);
+```
+
+涉及到的 controller 和 service：
+
+- `app/controller/admin/goods.js`
+  - `getGoodsListByCategorySubID`
+- `app/service/admin/goods.js`
+  - `findGoodsByCategoryID`
+
 ## 优化
 
 ### sql防注入

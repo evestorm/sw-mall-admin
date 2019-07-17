@@ -23,7 +23,7 @@ class UserController extends Controller {
           const { id, username, avatar } = user;
           const rule = { id, username, avatar };
           // jwt.sign('规则', '加密名字', '过期时间')
-          const token = jwt.sign(rule, 'lance', { expiresIn: '60s' });
+          const token = jwt.sign(rule, 'lance', { expiresIn: '3600s' });
           ctx.body = {
             code: 0,
             message: 'success',

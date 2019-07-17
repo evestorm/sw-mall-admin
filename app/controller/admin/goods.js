@@ -131,6 +131,38 @@ class GoodsController extends Controller {
       };
     }
   }
+  // ================ 手机端商城 =================
+  /**
+   * 根据当前请求二级分类和页码返回商品列表
+   */
+  async getGoodsListByCategorySubID() {
+    const { ctx } = this;
+    // 子类别ID 当前请求的页数 每页显示数量 开始位置
+    const { curSubCateId, page } = ctx.request.body;
+    const num = 10;
+    const start = (page - 1) * num;
+    const filter = {
+      SUB_ID: curSubCateId,
+      page,
+      num,
+      start,
+    };
+    const result = await ctx.service.admin.goods.findGoodsByCategorySubID(filter);
+    if (result) {
+      ctx.status = 200;
+      ctx.body = {
+        code: 0,
+        message: '数据请求成功！',
+        data: result,
+      };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        code: 1,
+        message: '数据请求失败',
+      };
+    }
+  }
 }
 
 module.exports = GoodsController;
