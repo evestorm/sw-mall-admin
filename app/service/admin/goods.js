@@ -182,6 +182,7 @@ class GoodsService extends Service {
       limit: num,
       offset: start,
     });
+    // TODO:不要给这么多数据，前端需要什么给什么字段
     return goodsList;
   }
 }

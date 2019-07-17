@@ -12,7 +12,7 @@ module.exports = app => {
   router.post('/login', controller.user.login);
   router.post('/register', controller.user.register);
   router.get('/user', jwt, controller.user.user);
-  router.post('/goods/list', jwt, controller.admin.goods.getGoodsListByCategorySubID);
+  router.post('/goods/list', controller.admin.goods.getGoodsListByCategorySubID);
   // 后台管理
   router.post('/admin/login', controller.admin.admin.login);
   router.post('/admin/register', controller.admin.admin.register);
