@@ -36,14 +36,14 @@ class GoodsController extends Controller {
    */
   async getGoodsDetail() {
     const { ctx } = this;
-    const results = await ctx.service.admin.goods.findOne(ctx.params.ID);
-    if (results) {
+    const result = await ctx.service.admin.goods.findOne(ctx.params.ID);
+    if (result) {
       ctx.status = 200;
       ctx.body = {
         code: 0,
         message: '成功获取商品数据',
         data: {
-          results,
+          result,
         },
       };
     } else {

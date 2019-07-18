@@ -61,7 +61,6 @@ class GoodsService extends Service {
    * @return {boolean} 是否成功
    */
   async add(info) {
-    // TODO: 测验直接写 info 会不会报错
     // 生成随机32位「数字+字母」字符串
     const ID = this.ctx.helper.getRandomStr(32);
     info.ID = ID;

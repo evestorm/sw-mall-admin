@@ -750,6 +750,38 @@ router.post('/goods/list', jwt, controller.admin.goods.getGoodsListByCategorySub
 - `app/service/admin/goods.js`
   - `findGoodsByCategoryID`
 
+### 商品详情页
+
+获取商品详情数据所涉及到的文件：
+
+- `app/controller/admin/goods.js`
+  - `getGoodsDetail`
+
+#### 评论列表
+
+商品详情页中包含评论列表，我们需要根据前端传递过来的商品ID查询对应的评论数据，该接口带分页功能，文件导航：
+
+- `app/controller/comment.js`
+- `app/service/comment.js`
+
+这里列一下评论表 `comments` 的逻辑
+
+关键字段：
+
+- pid - 一级评论id
+- replyid - 被回复评论的id
+
+评论分为：
+
+- 一级评论
+
+- - 直接对商品进行评论 - pid 和 replyid 为 0
+
+- 二级评论
+
+- - 对一级评论进行回复 - pid 和 replyid 都为 一级评论id
+  - 对楼中楼进行回复 - pid 为 一级评论 id，replyid 为你回复的评论id
+
 ### 个人中心
 
 个人中心页相关的接口仅有三个，它们分别是：

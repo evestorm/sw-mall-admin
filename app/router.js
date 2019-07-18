@@ -15,6 +15,9 @@ module.exports = app => {
   router.get('/user', jwt, controller.user.user);
   router.post('/updateUserInfo', jwt, controller.user.updateUserInfo);
   router.post('/goods/list', controller.admin.goods.getGoodsListByCategorySubID);
+  router.get('/goods/detail/:ID', controller.admin.goods.getGoodsDetail);
+  router.post('/comments/list', controller.comment.getCommentsListByGoodsId);
+  router.post('/comments/addComment', jwt, controller.comment.addComment);
   // 后台管理
   router.post('/admin/login', controller.admin.admin.login);
   router.post('/admin/register', controller.admin.admin.register);
