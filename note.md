@@ -750,6 +750,18 @@ router.post('/goods/list', jwt, controller.admin.goods.getGoodsListByCategorySub
 - `app/service/admin/goods.js`
   - `findGoodsByCategoryID`
 
+### 个人中心
+
+个人中心页相关的接口仅有三个，它们分别是：
+
+- 获取用户信息
+  - `app/controller/user.js` 的 user 方法
+- 更新用户信息
+  - `app/controller/user.js` 的 updateUserInfo 方法
+  - `app/service/user.js` 的 update 方法
+- 上传头像
+  - `app/controller/upload.js` 的 upload 方法
+
 ## 优化
 
 ### sql防注入

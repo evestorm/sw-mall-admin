@@ -44,7 +44,7 @@ class CategoryController extends Controller {
   }
 
   /**
-   * 编辑一个一级商品分类
+   * 更新一个一级商品分类
    */
   async editCategory() {
     const { ctx } = this;

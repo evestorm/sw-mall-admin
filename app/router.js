@@ -10,8 +10,10 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.get('/index', controller.home.index);
   router.post('/login', controller.user.login);
+  router.post('/upload', jwt, controller.upload.upload);
   router.post('/register', controller.user.register);
   router.get('/user', jwt, controller.user.user);
+  router.post('/updateUserInfo', jwt, controller.user.updateUserInfo);
   router.post('/goods/list', controller.admin.goods.getGoodsListByCategorySubID);
   // 后台管理
   router.post('/admin/login', controller.admin.admin.login);

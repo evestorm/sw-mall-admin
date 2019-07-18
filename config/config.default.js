@@ -32,9 +32,19 @@ module.exports = appInfo => {
     agent: false,
   };
 
-  // 配置跨域（上线后把下方 origin 改为你的域名，例如 http://mall.evelance.cn）
+  // 开发阶段暂时关闭 csrf 防御
+  config.security = {
+    csrf: {
+      enable: false,
+      ignoreJSON: true,
+    },
+    // 配置白名单（上线后把下方 origin 改为你的域名，例如 http://mall.evelance.cn）
+    domainWhiteList: [ 'http://192.168.31.252:8080', 'http://localhost:8080', 'http://mall.evelance.cn' ],
+  };
+
+  // 配置跨域
   config.cors = {
-    origin: 'http://localhost:8080',
+    // origin: '*',
     credentials: true,
   };
 
@@ -54,12 +64,6 @@ module.exports = appInfo => {
     ],
   };
 
-  // 开发阶段暂时关闭 csrf 防御
-  config.security = {
-    csrf: {
-      enable: false,
-    },
-  };
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

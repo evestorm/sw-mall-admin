@@ -43,9 +43,9 @@ class UserService extends Service {
    * @return {boolean} 是否成功
    */
   async update(info) {
-    const { id, username, email, password, avatar } = info;
+    const { id, username, email, avatar } = info;
     const result = await this.app.mysql.update('user', {
-      id, username, email, password, avatar,
+      id, username, email, avatar,
     });
     console.log(result);
     return result.affectedRows === 1;

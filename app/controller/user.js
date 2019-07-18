@@ -21,7 +21,7 @@ class UserController extends Controller {
       await ctx.service.user.comparePassword(password, hashpwd).then(isMatch => {
         if (isMatch) {
           const { id, username, avatar } = user;
-          const rule = { id, username, avatar };
+          const rule = { id, email, username, avatar };
           // jwt.sign('规则', '加密名字', '过期时间')
           const token = jwt.sign(rule, 'lance', { expiresIn: '3600s' });
           ctx.body = {
@@ -99,6 +99,43 @@ class UserController extends Controller {
     }
   }
 
+  /**
+   * 更新个人信息
+   */
+  async updateUserInfo() {
+    const { ctx } = this;
+    ctx.body = ctx.request.body;
+    const { email } = ctx.request.body;
+    const result = await ctx.service.user.findOne(email);
+    if (result) {
+      await ctx.service.user.update(ctx.body).then(updated => {
+        if (updated) {
+          ctx.status = 200;
+          ctx.body = {
+            code: 0,
+            message: '更新成功！',
+          };
+        } else {
+          ctx.status = 400;
+          ctx.body = {
+            code: 1,
+            message: '更新失败！请稍后再试',
+          };
+        }
+      });
+    } else {
+      ctx.status = 200;
+      ctx.body = {
+        code: 1,
+        message: '没有查询到您要更新的用户',
+      };
+    }
+  }
+
+
+  /**
+   * 获取用户信息
+   */
   async user() {
     const { ctx } = this;
     // 使用 ctx.isAuthenticated() 判断是否登录。
