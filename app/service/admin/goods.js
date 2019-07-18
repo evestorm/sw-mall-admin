@@ -184,6 +184,37 @@ class GoodsService extends Service {
     // TODO:不要给这么多数据，前端需要什么给什么字段
     return goodsList;
   }
+
+  async findGoodsListBySearch(filter) {
+    // 关键词 页数 条件 是否降序
+    const { name, page, mark, isdesc } = filter;
+    // mark: all, sales, price, comment
+    let where = `WHERE NAME LIKE '%${name}%'`;
+    let order = '';
+    const sort = isdesc === 'true' ? 'DESC' : 'ASC';
+    switch (mark) {
+      case 'all':
+        where += '';
+        break;
+      case 'sales':
+        order += `ORDER BY SALES_COUNT ${sort}`;
+        break;
+      case 'price':
+        order += `ORDER BY PRESENT_PRICE ${sort}`;
+        break;
+      case 'new':
+        order += 'ORDER BY UPDATE_TIME DESC';
+        break;
+      default:
+        break;
+    }
+    const num = 10; // 每页显示数量
+    const start = (page - 1) * num; // 开始位置
+    const query = `SELECT * FROM goods ${where} ${order} LIMIT ${start}, ${num}`;
+    console.log(query);
+    const results = await this.app.mysql.query(query);
+    return results;
+  }
 }
 
 module.exports = GoodsService;

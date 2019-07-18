@@ -794,6 +794,15 @@ router.post('/goods/list', jwt, controller.admin.goods.getGoodsListByCategorySub
 - 上传头像
   - `app/controller/upload.js` 的 upload 方法
 
+### 搜索页
+
+搜索页会根据前端的筛选条件查询商品数据，而且带有分页功能，具体代码见：
+
+- `app/controller/admin/goods.js` 下的
+  - `getGoodsListBySearch` 方法
+- `app/service/admin/goods.js` 下的
+  - `findGoodsListBySearch` 方法
+
 ## 优化
 
 ### sql防注入

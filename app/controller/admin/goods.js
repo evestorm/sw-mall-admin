@@ -163,6 +163,30 @@ class GoodsController extends Controller {
       };
     }
   }
+
+  /**
+   * 根据当前请求二级分类和页码返回商品列表
+   */
+  async getGoodsListBySearch() {
+    const { ctx } = this;
+    // 子类别ID 当前请求的页数 每页显示数量 开始位置
+    const result = await this.service.admin.goods.findGoodsListBySearch(ctx.request.body);
+    console.log(result);
+    if (result) {
+      ctx.status = 200;
+      ctx.body = {
+        code: 0,
+        message: '查询商品成功！',
+        data: result,
+      };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        code: 1,
+        message: '查询商品失败',
+      };
+    }
+  }
 }
 
 module.exports = GoodsController;

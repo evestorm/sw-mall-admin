@@ -18,6 +18,7 @@ module.exports = app => {
   router.get('/goods/detail/:ID', controller.admin.goods.getGoodsDetail);
   router.post('/comments/list', controller.comment.getCommentsListByGoodsId);
   router.post('/comments/addComment', jwt, controller.comment.addComment);
+  router.post('/search', controller.admin.goods.getGoodsListBySearch);
   // 后台管理
   router.post('/admin/login', controller.admin.admin.login);
   router.post('/admin/register', controller.admin.admin.register);
