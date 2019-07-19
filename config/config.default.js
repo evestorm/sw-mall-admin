@@ -38,14 +38,15 @@ module.exports = appInfo => {
       enable: false,
       ignoreJSON: true,
     },
-    // 配置白名单（上线后把下方 origin 改为你的域名，例如 http://mall.evelance.cn）
-    domainWhiteList: [ 'http://192.168.31.252:8080', 'http://localhost:8080', 'http://mall.evelance.cn' ],
+    // 配置白名单（上线后在下方 白名单中 添加你自己的域名，例如 http://www..baidu.cn）
+    domainWhiteList: [ 'http://192.168.31.252:8080', 'http://localhost:8080', 'http://192.168.31.252:8090', 'http://localhost:8090', 'http://mall.evelance.cn' ],
   };
 
   // 配置跨域
   config.cors = {
-    // origin: '*',
-    credentials: true,
+    origin: '*',
+    // credentials: true,
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
   };
 
   // 配置公共访问目录

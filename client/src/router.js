@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Index from './views/Index.vue'
 import Dashboard from './views/Dashboard.vue'
 import UserInfo from './views/UserInfo.vue'
+import AddUser from './views/AddUser.vue'
 import CategoryList from './views/CategoryList.vue'
 import GoodsList from './views/GoodsList.vue'
 import GoodsDetail from './views/GoodsDetail.vue'
@@ -24,6 +25,7 @@ const router = new Router({
       children: [
         { path: '', component: Dashboard },
         { path: '/dashboard', name: 'dashboard', component: Dashboard, meta: { title: 'Dashboard' } },
+        { path: '/adduser', name: 'adduser', component: AddUser, meta: { title: '添加管理员' } },
         { path: '/userinfo', name: 'userinfo', component: UserInfo, meta: { title: '个人信息' } },
         { path: '/categorylist', name: 'categorylist', component: CategoryList, meta: { title: '分类列表' } },
         { path: '/goodslist', name: 'goodslist', component: GoodsList, meta: { title: '商品列表' } },

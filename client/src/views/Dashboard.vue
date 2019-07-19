@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <el-row :gutter="10">
-      <el-col v-for="(item, index) in topList" :key="index" :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+      <el-col v-for="(item, index) in topList" :key="index" :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
         <el-card class="box-card">
           <div class="item-left">
             <i :class="item.icon" :style="`color: ${item.color}`"></i>
@@ -32,7 +32,6 @@ export default {
   data() {
     return {
       topList: [
-        { icon: 'el-icon-s-home', key: 'pv', name: '总访问量', num: 0, color: '#40c9c6' },
         { icon: 'el-icon-user-solid', key: 'regUsers', name: '周注册用户', num: 0, color: '#36a3f7' },
         { icon: 'el-icon-s-shop', key: 'newGoodsNum', name: '周商品上新', num: 0, color: '#f4516c' }
       ], // 顶部四栏数据

@@ -11,10 +11,6 @@
 
 ## 使用
 
-### 准备工作
-
-找到 `client/src/components/TinymceEditor.vue` 中的 「language_url」和「skin_url」字段，将路径中的 "/admin" 字样去掉。
-
 下载[此sql文件](sw-mall.sql)将其导入你自己的mysql文件中。
 
 ### 安装

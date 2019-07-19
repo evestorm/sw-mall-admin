@@ -154,7 +154,7 @@ export default {
     // 获取商品详情
     _getGoodsDetail() {
       getGoodsDetail(this.detailForm.ID)().then(data => {
-        this.detailForm = data.results
+        this.detailForm = data.result
         // 把UTC格式转为GMT
         this.detailForm.CREATE_TIME = eosFormatTime(this.detailForm.CREATE_TIME)
         this.detailForm.UPDATE_TIME = eosFormatTime(this.detailForm.UPDATE_TIME)
@@ -234,11 +234,11 @@ export default {
       })
     },
     // 初始化当前二级分类
-    initSubCate(value) {
+    initSubCate(defaultSubCateId) {
       // 路由参数ID为add代表添加，否则代表新增
       if (this.$route.params.ID === 'add') {
         this.type = 'add'
-        this.detailForm.SUB_ID = value
+        this.detailForm.SUB_ID = defaultSubCateId
       } else {
         this.type = 'edit'
         this.detailForm.ID = this.$route.params.ID || ''

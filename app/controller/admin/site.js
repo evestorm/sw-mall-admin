@@ -5,21 +5,18 @@ const Controller = require('egg').Controller;
 class SiteController extends Controller {
   async getSiteInfo() {
     const { ctx } = this;
-    // 网站总访问量
-    const pv = await ctx.service.admin.site.findPV();
     // 周用户注册数
     const regUsers = await ctx.service.admin.site.getRegisteredUsers();
     // 周商品上新
     const newGoodsNum = await ctx.service.admin.site.getNewGoodsNum();
     // 商品销量前十
     const salesTop10 = await ctx.service.admin.site.getSalesOfTOP10();
-    if (pv && regUsers && newGoodsNum) {
+    if (regUsers && newGoodsNum) {
       ctx.status = 200;
       ctx.body = {
         code: 0,
         message: '成功获取首页数据',
         data: {
-          pv,
           regUsers,
           newGoodsNum,
           salesTop10,

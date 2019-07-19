@@ -48,27 +48,22 @@ export default {
   data () {
     return {
       init: {
-        // 本人后台管理系统放在域名下的 `/admin` 目录，
-        // 所以加上了 `/admin` 前缀，读者如果不需要则解开下面两行注释了的代码，并注释掉与之相关的两行带有admin的代码
-        // language_url: '/tinymce/langs/zh_CN.js',
-        language_url: '/admin/tinymce/langs/zh_CN.js',
+        language_url: '/tinymce/langs/zh_CN.js',
         language: 'zh_CN',
-        // skin_url: '/tinymce/skins/ui/oxide',
-        skin_url: '/admin/tinymce/skins/ui/oxide',
-        // skin_url: '/tinymce/skins/ui/oxide-dark',//暗色系
+        skin_url: '/tinymce/skins/ui/oxide',
         height: 300,
         plugins: this.plugins,
         toolbar: this.toolbar,
         branding: false,
         menubar: false,
-        // 此处为图片上传处理函数，这个直接用了base64的图片形式上传图片，
-        // 如需ajax上传可参考https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_handler
+        // 此处为图片上传处理函数
+        // 文档地址：https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_handler
         images_upload_handler: (blobInfo, success, failure) => {
           // 这是base64格式的方式
           // const img = 'data:image/jpeg;base64,' + blobInfo.base64()
           // success(img)
 
-          // 这是ajax方式
+          // 这是ajax的方式
           let formData = new FormData()
           formData.append('file', blobInfo.blob(), blobInfo.filename())
           let config = {

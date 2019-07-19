@@ -4,23 +4,12 @@ const Service = require('egg').Service;
 
 class SiteService extends Service {
   /**
-   * 网站总访问量
-   * @return {number} 访问量
-   */
-  async findPV() {
-    const result = await this.app.mysql.get('site_info', {
-      name: '网站访问量',
-    });
-    return result.value;
-  }
-
-  /**
    * 获取周用户注册数
    * @return {number} 注册数量
    */
   async getRegisteredUsers() {
     const results = await this.app.mysql.query('SELECT COUNT(*) AS RESULTS FROM user WHERE DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= create_time');
-    return results.length;
+    return results[0].RESULTS;
   }
 
   /**
@@ -28,7 +17,7 @@ class SiteService extends Service {
    */
   async getNewGoodsNum() {
     const results = await this.app.mysql.query('SELECT COUNT(*) AS RESULTS FROM goods WHERE DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= CREATE_TIME');
-    return results.length;
+    return results[0].RESULTS;
   }
 
   /**

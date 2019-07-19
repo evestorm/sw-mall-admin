@@ -10,6 +10,7 @@ const POST = 'post'
 // const postLogin = request(`${baseURL}/login`, POST)
 const postLogin = request(`${baseURL}login`, POST) // 登录
 const getUser = request(`${baseURL}user`) // 获取管理员信息
+const addUser = request(`${baseURL}register`, POST) // 注册管理员
 const getSiteInfo = request(`${baseURL}siteinfo`) // 获取首页信息
 const getCategory = request(`${baseURL}category`) // 获取商品分类信息
 const addCategory = request(`${baseURL}category/add`, POST) // 新增商品分类
@@ -35,6 +36,7 @@ const deleteGoods = function (ID) {
 export {
   postLogin,
   getUser,
+  addUser,
   getSiteInfo,
   getCategory,
   addCategory,

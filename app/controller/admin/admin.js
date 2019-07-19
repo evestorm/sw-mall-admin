@@ -100,6 +100,9 @@ class AdminController extends Controller {
     }
   }
 
+  /**
+   * 获取管理员信息
+   */
   async admin() {
     const { ctx } = this;
     // 使用 ctx.isAuthenticated() 判断是否登录。

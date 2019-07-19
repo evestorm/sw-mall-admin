@@ -69,12 +69,12 @@ config.mysql = {
 #### 数据库结构
 
 - admin 管理员表
-- category 一二级分类表
+- category 一二级商品分类表
 - comments 用户评论表
 - goods 商品表
 - site_info 网站信息表
 - user 用户表
-- adverts 广告+banner
+- adverts 广告+banner表
 
 ### 测试数据库连接
 
@@ -139,6 +139,44 @@ router.get('/test', controller.home.test);
     ...
   ]
 }
+```
+
+### 跨域配置
+
+首先下载 egg-cors 包：
+
+```shell
+npm i egg-cors
+```
+
+然后在 `config/plugin.js` 中设置开启cors：
+
+```js
+cors: {
+  enable: true,
+  package: 'egg-cors',
+},
+```
+
+最后在 `config/config.default.js` 中配置：
+
+```js
+config.security = {
+  csrf: {
+    enable: false, // 关闭 egg 的 csrf 防御
+    ignoreJSON: true,
+  },
+  // 配置白名单（上线后在下方 白名单中 添加你自己的域名，例如 http://www..baidu.cn）
+  domainWhiteList: [ 'http://192.168.31.252:8080', 'http://localhost:8080', 'http://192.168.31.252:8090', 'http://localhost:8090', 'http://mall.evelance.cn' ],
+};
+// ↑ 白名单列表解释：192开头是你本地ip地址，目的是方便手机本地测试，平常电脑上开发用 localhost，另外8080是后台管理系统的端口，8090是商城App的端口，最后的域名是你上线后的域名 ↑
+
+// 配置跨域
+config.cors = {
+  origin: '*',
+  // credentials: true, // 今后你的前端项目如果需要发送cookie，记得解开此处注释，并且前端 axios 也得配置withCredentials=true
+  allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+};
 ```
 
 ## 编写注册接口
@@ -287,7 +325,7 @@ async login() {
 }
 ```
 
-上述代码可以用下面的伪代码概括：
+上述代码可以用下面的简述概括：
 
 ```js
 根据用户输入的邮箱在数据库中查找是否存在该管理员账户
@@ -412,9 +450,8 @@ async admin() {
 
 ## 编写首页接口
 
-首页主要展示4项信息：
+首页主要展示3项信息：
 
-- 商城总访问量
 - 本周新注册用户
 - 本周商品上新数量
 - 销量前十的商品柱状图（EChartJS）

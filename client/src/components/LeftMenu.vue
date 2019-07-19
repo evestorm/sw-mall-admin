@@ -24,6 +24,10 @@
       <i class="el-icon-user"></i>
       <span slot="title">个人中心</span>
     </el-menu-item>
+    <el-menu-item index="/adduser" v-if="user.role === 'admin'">
+      <i class="el-icon-circle-plus-outline"></i>
+      <span slot="title">添加管理员</span>
+    </el-menu-item>
   </el-menu>
 </template>
 
@@ -41,9 +45,6 @@ export default {
         }
       ]
     }
-  },
-  mounted() {
-    console.log(this.$route.path)
   },
   computed: {
     user() {
