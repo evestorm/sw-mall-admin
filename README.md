@@ -47,6 +47,15 @@ cd client
 npm run serve
 ```
 
+### 快速登录
+
+- 账号：admin@qq.com
+- 密码：admin@qq.com
+
+### 项目编写说明
+
+想要了解该项目的大致构建流程？点击[此处查看编写说明](./note_with_toc.md)
+
 ## 功能
 
 - [x] 登录/注册

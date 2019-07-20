@@ -11,7 +11,7 @@
  Target Server Version : 50638
  File Encoding         : 65001
 
- Date: 20/07/2019 14:24:31
+ Date: 20/07/2019 14:36:58
 */
 
 SET NAMES utf8mb4;
@@ -909,7 +909,7 @@ INSERT INTO `user` VALUES (21, '香蕉香蕉香蕉', 'xjxjxj@qq.com', '$2b$10$S9
 INSERT INTO `user` VALUES (22, '随便起个名字', 'sb@qq.com', '$2b$10$J3UVdJ9fcRu.osWuTO55BeFW7BJJqgNf4rXth/4XcoAe1hcv8Pfp2', 'https://storage.360buyimg.com/i.imageUpload/7764556849624c434d624a76557631343439373930323237323232_sma.jpg', '2019-07-18 19:39:03');
 INSERT INTO `user` VALUES (23, '红红火火恍恍惚惚', 'hhhh@qq.com', '$2b$10$39TcZvDCu4ltMOlnb5oybuZyWv8tZO4hGyXrhg4Sd1EcmAfRzZMC6', 'http://placekitten.com/300/200', '2019-07-18 19:39:03');
 INSERT INTO `user` VALUES (24, 'natapp', 'natapp@qq.com', '$2b$10$g7zMJ2I7OSiyD2XD7JOdCeL4/Y1fW32toHCNS17LqChzbAMM9Vc1a', 'http://placekitten.com/300/200', '2019-07-18 19:39:03');
-INSERT INTO `user` VALUES (25, 'admin', 'admin@qq.com', '$2b$10$cYuzca0Qzms7s80KCG4SBO5QaTDhuUxufmuLeQASzvZd.V1olZmue', 'https://storage.360buyimg.com/i.imageUpload/6a645f3632373838326432373665636431353035383935363637383636_sma.jpg', '2019-07-18 19:39:03');
+INSERT INTO `user` VALUES (25, 'admin', 'admin@qq.com', '$2b$10$xDsuFCo9cGcVwe8wzQpAGuuIQFWMA7anBtENrM9LEb4ZXAy5vB2dq', 'https://storage.360buyimg.com/i.imageUpload/6a645f3632373838326432373665636431353035383935363637383636_sma.jpg', '2019-07-18 19:39:03');
 INSERT INTO `user` VALUES (26, 'Aaaaa', 'aa@qq.com', '$2b$10$4rqRFE1o/H2El74TBAROju8xmswf0W/.zLh9cmpT3oAwqczZMYILe', 'http://placekitten.com/300/200', '2019-07-18 19:39:03');
 INSERT INTO `user` VALUES (27, '4445554', '454@qq.com', '$2b$10$eF8Jl4XYy758a4yV9HOiGuvV78TO9Jhf7fNOZs1meQQndyJc565HW', 'http://placekitten.com/300/200', '2019-07-18 19:39:03');
 INSERT INTO `user` VALUES (28, 'bilibilibili', 'bbb@qq.com', '$2b$10$JhuKm35NbzFMHXLrZyw/VemxAeildBLKZT2Mte/fkg9RnNeXcghr.', 'http://placekitten.com/300/200', '2019-07-18 19:39:03');
