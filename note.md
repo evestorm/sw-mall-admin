@@ -886,9 +886,9 @@ async findAllByFilter(filter) {
 
 ## 上线
 
-此时再上传我们整个项目，然后在服务器的该项目目录的终端下执行 `npm run dev` 就能开启服务，让前端正常请求道接口提供的数据了。
+在上线之前，我们还需要做一些配置。
 
-最后的最后，我们还需要对上传接口进行改造，还记得之前我们上传成功后返回给前端了一个图片路径吗？它被设置成了 "http://localhost:7001" 开头，这个链接如果直接单拎出来是无法访问到的，所以生产环境下我们需要把它替换成你自己的域名，文件路径 `app/controller/admin/form.js`，修改代码如下：
+首先是上传接口的改造，还记得之前我们上传成功后返回给前端了一个图片路径吗？它被设置成了 "http://localhost:7001" 开头，这个链接如果直接单拎出来是无法访问到的，所以生产环境下我们需要把它替换成你自己的域名，文件路径 `app/controller/admin/form.js`，修改代码如下：
 
 ```js
 ...
@@ -903,7 +903,27 @@ this.ctx.body = {
 };
 ```
 
+p.s. 确保你的 `app/public/admin/image` 下有至少一个文件，否则很可能上传服务器后由于image下无文件导致整个 `admin/image` 文件夹都不存在，那样的话你上传图片就会因找不到路径而报错。
+
+接下来的配置就是移除项目中所有的 `console.log` 打印，让控制台保持“清爽”：
+
+首先安装 `npm install terser-webpack-plugin -D`
+
+然后在vue.config.js文件里写插件的配置：
+
+```js
+module.export = {
+  configureWebpack: (config)=>{
+    if(process.env.NODE_ENV === 'production'){
+      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
+    }
+  }
+}
+```
+
 最后在生产环境下，我们就不采用 `npm run dev` 来启动项目了，而改用：`egg_server_env=prod npm start`。
+
+现在把项目上传到你的服务器后，在项目目录的终端下执行 `npm run dev` 就能开启服务，让前端正常请求到接口提供的数据了。
 
 p.s. 前端代码的上线流程见 `client/note.md` 的 [最后部分](./client/note.md) 。
 
