@@ -7,6 +7,8 @@
 ### 线上地址
 
 - [后台管理系统](http://mall.evelance.cn/admin)
+- 账号：admin@qq.com
+- 密码：admin@qq.com
 
 ### 前端项目地址
 
