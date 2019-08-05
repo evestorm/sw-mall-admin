@@ -11,7 +11,7 @@ class SiteController extends Controller {
     const newGoodsNum = await ctx.service.admin.site.getNewGoodsNum();
     // 商品销量前十
     const salesTop10 = await ctx.service.admin.site.getSalesOfTOP10();
-    if (regUsers && newGoodsNum) {
+    if (regUsers >= 0 && newGoodsNum >= 0) {
       ctx.status = 200;
       ctx.body = {
         code: 0,
